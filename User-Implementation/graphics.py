@@ -1,6 +1,12 @@
-# Color Adjustments for 2048 Game Project
-# Written by: Filip J. Cierkosz
-# Date: 11/2021
+'''
+2048 GAME PROJECT: Graphics adjustments.
+
+Date started: 
+    11/2021
+
+Author:
+    Filip J. Cierkosz
+'''
 
 # Background color for the grid.
 GRID_COLOR = '#080942'

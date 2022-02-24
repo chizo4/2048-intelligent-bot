@@ -2,6 +2,16 @@
 # Written by: Filip J. Cierkosz
 # Date: 11/2021
 
+'''
+2048 GAME PROJECT: CSV Datafile Adjustments.
+
+Date created:
+    02/2022
+
+Author:
+    Filip J. Cierkosz
+'''
+
 import csv
 
 # Function 1: Initialize/Reset the datafile.
