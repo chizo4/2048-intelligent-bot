@@ -49,6 +49,18 @@ class GridSelectionWindow:
         # enter after inputting an appropriate grid size.
         self.playGame = False
 
+    def getResponse(self):
+        '''
+        Accessor for the user's response.
+
+            Parameters:
+                self
+
+            Returns:
+                self.response (string) : Grid size selected by the user.
+        '''
+        return self.response
+
     def promptUser(self):
         '''
         Gets the user response, which defines the size of the grid.

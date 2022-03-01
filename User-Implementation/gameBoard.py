@@ -38,7 +38,7 @@ class Game2048:
         # Initially, create a proper-sized array full of zeros that will be 
         # later used as the grid in the game.
         self.grid = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
-        # Define the dimensions of the GUI window.
+        # Dimensions of the GUI window.
         self.HEIGHT = 540
         self.WIDTH = 500
         # Space at the top of GUI that is left to display time and score.
@@ -70,6 +70,42 @@ class Game2048:
         self.fontMsg = pygame.font.SysFont(FONT_BOARD[0],
                                            FONT_SIZES['finalMsg'],
                                            FONT_BOARD[1])
+
+    def getScore(self):
+        '''
+        Accessor for the score.
+
+            Parameters:
+                self
+
+            Returns:
+                self.score (int) : Score obtained during the game.
+        '''
+        return self.score
+
+    def getTime(self):
+        '''
+        Accessor for the time that elapsed while playing the game.
+
+            Parameters:
+                self
+
+            Returns:
+                self.timer (float) : Time in seconds elapsed while playing the game (2 d.p.).
+        '''
+        return self.timer
+
+    def getGridSize(self):
+        '''
+        Accessor for the current grid size.
+
+            Parameters:
+                self
+
+            Returns:
+                self.GRID_SIZE : Current grid size on the board.
+        '''
+        return self.GRID_SIZE
 
     @staticmethod
     def updateArr(curr, self):

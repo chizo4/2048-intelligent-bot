@@ -9,13 +9,13 @@ Author:
 '''
 
 # Background color for the grid.
-GRID_COLOR = '#080942'
+GRID_COLOR = '#12023d'
 
 # Font style.
 FONT_BOARD = ('Comic Sans MS', 'bold')
 
 # Font colors.
-GRID_FONT_COLOR = '#080942'
+GRID_FONT_COLOR = '#12023d'
 WINDOW_FONT_COLOR = '#fafafa'
 USER_FONT_COLOR = '#a2ff29'
 
