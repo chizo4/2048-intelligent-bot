@@ -1,5 +1,5 @@
 '''
-2048 GAME PROJECT: Data handling with DB.
+2048 GAME PROJECT: Data handling with database and pandas dataframe.
 
 Date created:
     03/2022
@@ -40,6 +40,8 @@ def updateDB(id, gs, sc, tsec, dt):
     '''
     Updates the database inserting a new row.
     '''
+    # Update only if the execution of the game was full, i.e. the user did not
+    # escape the game before losing.
     if (tsec>0):
         try:
             # Connect with the DB and create the cursor.
@@ -90,12 +92,58 @@ def countDBRows():
     except sqlite3.Error as e:
         print(f'Failed to count the DB rows. An error occurred:\n', e)
 
+def getGridBestScore(gs):
+
+    '''
+    Finds the best score recorded in the database for an input grid size.
+
+        Parameters:
+            gs (int) : Size of the currently selected grid.
+
+        Returns:
+            best (int) : Best score on the currently selected grid.
+    '''
+    '''try:
+        # Connect with the DB.
+        db = sqlite3.connect('scores.db', detect_types=sqlite3.PARSE_DECLTYPES)
+
+        # What is the average distance for VeriFone?
+        params = {
+            'vendor': 'VeriFone',
+        }
+
+        sql = 'SELECT distance FROM rides WHERE vendor = :vendor'
+        # Iterate through the database record to find the biggest score for the current grid.
+
+        # If no DB records on the current grid, return 0.
+
+        return 0
+    # Error handling
+    except sqlite3.Error as e:
+        print(f'Failed to retrieve the DB data. An error occurred:\n', e)'''
+    return 0
+
+def printRecordsDB():
+    '''
+    Displays a dataframe of the database records.
+    '''
+    try:
+        # Connect with the DB and create the cursor.
+        db = sqlite3.connect('scores.db')
+        cursor = db.cursor()
+
+        # Iterate through the rows and print out the contents of each row.
+        for row in cursor.execute('SELECT * FROM scores;'):
+            print(f'DB Record : {row}')
+    # Error handling.
+    except sqlite3.Error as e:
+        print(f'Failed to open the DB. An error occurred:\n', e)
+
 # Initialize the database (executed only at the very beginning).
 #initDB()
 
-#updateDB(123, 4, 2048, 60.0, '13-02-2022')
 
-#print(countDBRows())
+printRecordsDB()
 
 '''
 TO DO:

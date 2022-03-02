@@ -10,7 +10,7 @@
 - The grid is initialized with 2 random numbers (either 1 (highest probability rate), 2 or 4).
 - The game itself is controlled by the user using arrow keys.
 - The aim is to obtain the highest possible power of 2 in the board, i.e. the game goes further than 2048.
-- The best scores for each grid are stored in the CSV datafile.
+- The user scores for each grid are stored in an SQLITE database. 
 
 ##
 
@@ -20,7 +20,7 @@
 - The grid is initialized with 2 random numbers (either 1 (highest probability rate), 2 or 4).
 - The game is controlled by the AI bot (appropriate searching algorithms).
 - The aim for the bot is to obtain at least one 2048 square in the board.
-- The game is terminated when the bot reaches the score of 2048, which denotes a successful run.
+- The game is terminated when the bot reaches the score of 2048, which denotes a goal state to obtain.
 
 ##
 

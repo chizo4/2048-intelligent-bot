@@ -11,8 +11,10 @@ Author:
 from gameBoard import Game2048
 from gridSelection import GridSelectionWindow
 from scores import updateDB, countDBRows
-from bestScoresFunc import updateDatafile
 from datetime import datetime
+
+# To be replaced with scores.py!!!
+from bestScoresFunc import updateDatafile
 
 def main():
     '''
@@ -36,10 +38,10 @@ def main():
         # Create a datetime object of the current time.
         now = datetime.now()
 
-        # Update the database inserting a new row with the newest data.
+        # Update the database inserting a new row with the latest user data.
         updateDB(id=countDBRows(),
                  gs=game.getGridSize(),
-                 sc= game.getScore(),
+                 sc= int(game.getScore()),
                  tsec=game.getTime(),
                  dt=now.strftime('%d %b %Y %I:%M:%S %p'))
 
