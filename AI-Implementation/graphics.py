@@ -1,5 +1,5 @@
 '''
-2048 GAME PROJECT: Graphics adjustments.
+2048 GAME PROJECT: Graphics adjustments (AI).
 
 Date created: 
     11/2021
@@ -40,13 +40,9 @@ CELL_COLORS = {
     2048:'#ffb300',
 }
 
-# Dictionary of font sizes for different sizes of grid.
+# Dictionary of font sizes.
 FONT_SIZES = {
-    '3':40,
     '4':35,
-    '5':30,
-    '6':25,
     'finalMsg':30,
     'score':25,
-    'select':25
 }

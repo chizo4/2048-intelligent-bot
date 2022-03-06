@@ -4,6 +4,9 @@
 Date created:
     02/2022
 
+Date edited:
+    03/2022
+
 Author:
     Filip J. Cierkosz
 '''
@@ -13,42 +16,30 @@ from gridSelection import GridSelectionWindow
 from scores import updateDB, countDBRows
 from datetime import datetime
 
-# To be replaced with scores.py!!!
-from bestScoresFunc import updateDatafile
-
 def main():
     '''
-    Main method to execute the game and related methods.
+    Main method to execute the game and all related methods.
     '''
-    # Create an instance of the grid selection class.
+    # Initialize the grid selection windows. Collect user's responses.
     selection = GridSelectionWindow()
-
-    # Prompt the user for the grid size.
     selection.promptUser()
-
-    # Record the user response.
-    gridSize = int(selection.response)
+    gridSize = int(selection.getResponse())
     initGame = selection.playGame
     
+    # If the user intializes the game, initialize the game window and play.
     if (initGame):
-        # Create an instance of the game class and play.
         game = Game2048(gridSize)
         game.play()
 
         # Create a datetime object of the current time.
         now = datetime.now()
 
-        # Update the database inserting a new row with the latest user data.
+        # Update the database with a new row with the latest data.
         updateDB(id=countDBRows(),
                  gs=game.getGridSize(),
                  sc= int(game.getScore()),
                  tsec=game.getTime(),
                  dt=now.strftime('%d %b %Y %I:%M:%S %p'))
-
-        # TO BE DELETED
-        # Invoke the function to update score. It will be updated
-        # if the user beats the current best score.
-        #updateDatafile('bestScores.csv', gridSize, score)
 
 # Run the main program.
 if (__name__=='__main__'):

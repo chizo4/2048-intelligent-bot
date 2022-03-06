@@ -1,10 +1,7 @@
 '''
-2048 GAME PROJECT: 2048 game board.
+2048 GAME PROJECT (AI): 2048 game board (AI).
 
-Date created: 
-    11/2021
-
-Date edited:
+Date created:
     03/2022
 
 Author:
@@ -17,15 +14,14 @@ import pygame
 from pygame.locals import *
 from time import sleep, time
 from graphics import GRID_COLOR, CELL_COLORS, GRID_FONT_COLOR, FONT_BOARD, FONT_SIZES, USER_FONT_COLOR, WINDOW_FONT_COLOR
-from scores import getGridBestScore
 
 class Game2048:
     '''
     -----------
-    Class to create a game board for 2048. 
+    Class to create a game board for 2048 (AI). 
     -----------
     '''
-    def __init__(self, gs):
+    def __init__(self):
         '''
         Constructor to initialize an appropriately-sized grid for the game and set all attributes.
 
@@ -33,11 +29,10 @@ class Game2048:
                 self
                 gs (int) : Grid size of the game board.
         '''
-        # Set the grid size according to the user response.
-        self.GRID_SIZE = gs
+        # Set the grid size to 4 by default.
+        self.GRID_SIZE = 4
         self.score = 0
         self.timer = 0
-        self.currBestScore = getGridBestScore(gs)
         self.grid = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
         self.HEIGHT = 540
         self.WIDTH = 500
@@ -61,42 +56,6 @@ class Game2048:
         self.fontMsg = pygame.font.SysFont(FONT_BOARD[0],
                                            FONT_SIZES['finalMsg'],
                                            FONT_BOARD[1])
-
-    def getScore(self):
-        '''
-        Accessor for the score.
-
-            Parameters:
-                self
-
-            Returns:
-                self.score (int) : Score obtained during the game.
-        '''
-        return self.score
-
-    def getTime(self):
-        '''
-        Accessor for the time that elapsed while playing the game.
-
-            Parameters:
-                self
-
-            Returns:
-                self.timer (float) : Time in seconds elapsed while playing the game (2 d.p.).
-        '''
-        return self.timer
-
-    def getGridSize(self):
-        '''
-        Accessor for the current grid size.
-
-            Parameters:
-                self
-
-            Returns:
-                self.GRID_SIZE : Current grid size on the board.
-        '''
-        return self.GRID_SIZE
 
     @staticmethod
     def updateArr(curr, self):
@@ -141,7 +100,7 @@ class Game2048:
         Listens for the user keyboard press.
                 
             Returns:
-                str : User's response on keyboard.
+                str : AI's response.
         '''
         while (True):
             for event in pygame.event.get():
@@ -229,7 +188,7 @@ class Game2048:
 
     def makeMove(self, move):
         '''
-        Makes a move on the board based on the user keyboard press.
+        Makes a move on the board based on the AI response.
 
         If you wish to move to the left/right, look at the rows of the grid.
         If you wish to move up/down, look at the columns.
@@ -307,7 +266,7 @@ class Game2048:
                 self.grid = original
                 return False
 
-        # If none of the moves changes the state of the grid, it denotes the user loses.
+        # If none of the moves changes the state of the grid, it denotes the bot loses.
         return True
 
     def setTimer(self):
@@ -340,7 +299,7 @@ class Game2048:
 
     def play(self):
         '''
-        Main method to play the game.
+        Main method to execute the game.
 
             Parameters:
                 self
@@ -350,7 +309,7 @@ class Game2048:
 
         start = self.setTimer()
 
-        # Play as long as the game is neither over, nor quit by the user.
+        # Play as long as the game is neither over, nor won by the AI bot.
         while (True):
             # Draw the board, update and display the current score.
             self.draw()
@@ -360,6 +319,24 @@ class Game2048:
 
             # Update the screen.
             pygame.display.flip()
+
+            # If the AI bot reaches the goal state - 2048 - it denotes winning the game.
+            if (self.score==16):
+                self.window.fill((GRID_COLOR))
+                self.timer = self.stopTimer(start)
+
+                # Display the final message.
+                textArea = self.fontMsg.render(f'BOT WON THE GAME!', True, WINDOW_FONT_COLOR)
+                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
+                textArea = self.fontMsg.render(f'TIME PLAYED: {self.timer:.1f} SEC', True, WINDOW_FONT_COLOR)
+                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
+
+                # Update the window.
+                pygame.display.flip()
+
+                # Wait 5 seconds to display the final screen. Then, terminate the program.
+                sleep(5)
+                break
 
             # Get the user keyboard response.
             kbdResponse = self.listenForKeyPress()
@@ -379,23 +356,12 @@ class Game2048:
                 self.window.fill((GRID_COLOR))
                 self.timer = self.stopTimer(start)
 
-                # Show the final message, time played, scores to the user.
-                textArea = self.fontMsg.render('GAME OVER!', True, WINDOW_FONT_COLOR)
-                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-120)))
-                textArea = self.fontMsg.render(f'TIME PLAYED: {self.timer:.1f} SEC', True, WINDOW_FONT_COLOR)
+                # Display the final message.
+                textArea = self.fontMsg.render(f'BOT LOST.', True, WINDOW_FONT_COLOR)
                 self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
-                textArea = self.fontMsg.render(f'YOUR SCORE: {self.score}', True, WINDOW_FONT_COLOR)
+                textArea = self.fontMsg.render(f'TIME PLAYED: {self.timer:.1f} SEC', True, WINDOW_FONT_COLOR)
                 self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
 
-                # If the user beats the current best score, display appropriate message.
-                if (self.score>int(self.currBestScore)):
-                    textArea = self.fontMsg.render(f'NEW BEST SCORE: {self.score}', True, USER_FONT_COLOR)
-                    self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
-                # Otherwise, display the current best score.
-                else:
-                    textArea = self.fontMsg.render(f'BEST SCORE: {self.currBestScore}', True, WINDOW_FONT_COLOR)
-                    self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
-                
                 # Update the window.
                 pygame.display.flip()
 

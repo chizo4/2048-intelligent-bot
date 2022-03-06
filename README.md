@@ -8,9 +8,10 @@
   
 - The user might select a grid 3x3, 4x4, 5x5, or 6x6. 
 - The grid is initialized with 2 random numbers (either 1 (highest probability rate), 2 or 4).
+- The original game 2048, starts from 2 (2**1), whereas this example starts from the value of 2**0 instead of 2**1 in order to make it more diffcult - and more CS-friendly!
 - The game itself is controlled by the user using arrow keys.
 - The aim is to obtain the highest possible power of 2 in the board, i.e. the game goes further than 2048.
-- The user scores for each grid are stored in an SQLITE database. 
+- The user's scores for each grid are stored in an SQLITE database, and are processed using pandas. 
 
 ##
 

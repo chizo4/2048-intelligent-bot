@@ -15,11 +15,10 @@ def initDB():
     '''
     Initializes the database to store: user's ID, grid size, score, time played, date.
     '''
-    # Connect with the DB. Create the cursor.
     db = sqlite3.connect('scores.db')
     cursor = db.cursor()
 
-    # Create the table with appropriate schema.
+    # Create the table with defined schema.
     cursor.execute('DROP TABLE IF EXISTS scores')
     cursor.execute('''
                 CREATE TABLE scores (
@@ -44,11 +43,10 @@ def updateDB(id, gs, sc, tsec, dt):
     # escape the game before losing.
     if (tsec>0):
         try:
-            # Connect with the DB and create the cursor.
             db = sqlite3.connect('scores.db')
             cursor = db.cursor()
 
-            # Prepare the data to be inserted.
+            # Refine the data to be inserted.
             insertWithParams = '''INSERT INTO scores
                                 (id, grid_size, score, time_played_sec, date_played)
                                 VALUES (?, ?, ?, ?, ?);'''
@@ -80,20 +78,19 @@ def countDBRows():
             counter (int) : Number of rows in the table (used to assign ID).
     '''
     try:
-        # Connect with the DB and create the cursor.
         db = sqlite3.connect('scores.db')
         cursor = db.cursor()
 
-        # Count the rows in the DB and return counter.
+        # Count the rows in the DB, close DB and return counter.
         cursor.execute('SELECT COUNT(*) FROM scores')
         counter = cursor.fetchone()[0]
+        db.close()
         return counter
     # Error handling.
     except sqlite3.Error as e:
         print(f'Failed to count the DB rows. An error occurred:\n', e)
 
 def getGridBestScore(gs):
-
     '''
     Finds the best score recorded in the database for an input grid size.
 
@@ -103,50 +100,37 @@ def getGridBestScore(gs):
         Returns:
             best (int) : Best score on the currently selected grid.
     '''
-    '''try:
-        # Connect with the DB.
-        db = sqlite3.connect('scores.db', detect_types=sqlite3.PARSE_DECLTYPES)
+    try:
+        # Connect with the DB and execute the query to find results for the grid size.
+        db = sqlite3.connect('scores.db')
+        df = pd.read_sql_query(f'SELECT * FROM scores WHERE grid_size = {gs}', db)
 
-        # What is the average distance for VeriFone?
-        params = {
-            'vendor': 'VeriFone',
-        }
+        # Find the best score among filtered results.
+        best = df[df['score']==df['score'].max()]
 
-        sql = 'SELECT distance FROM rides WHERE vendor = :vendor'
-        # Iterate through the database record to find the biggest score for the current grid.
-
-        # If no DB records on the current grid, return 0.
+        # If dataframe is not empty, return the score. Otherwise, return 0.
+        if (not best.empty): return best.values[0][2]
 
         return 0
     # Error handling
     except sqlite3.Error as e:
-        print(f'Failed to retrieve the DB data. An error occurred:\n', e)'''
-    return 0
+        print(f'Failed to retrieve the DB data. An error occurred:\n', e)
 
 def printRecordsDB():
     '''
-    Displays a dataframe of the database records.
+    Displays the database records using pandas dataframe.
     '''
     try:
-        # Connect with the DB and create the cursor.
+        # Connect with the DB, create dataframe and display all its contents.
         db = sqlite3.connect('scores.db')
-        cursor = db.cursor()
-
-        # Iterate through the rows and print out the contents of each row.
-        for row in cursor.execute('SELECT * FROM scores;'):
-            print(f'DB Record : {row}')
+        df = pd.read_sql_query("SELECT * FROM scores", db)
+        print(df.to_string())
     # Error handling.
     except sqlite3.Error as e:
-        print(f'Failed to open the DB. An error occurred:\n', e)
+        print(f'Failed to process the DB. An error occurred:\n', e)
 
-# Initialize the database (executed only at the very beginning).
+# Initialize the database (executed only once, or when to recreate the DB).
 #initDB()
 
-
-printRecordsDB()
-
-'''
-TO DO:
-1. Pandas dataframe for displaying all the records in the DB.
-2. Method to get the best score on a particular grid.
-'''
+# Display all the database records.
+#printRecordsDB()

@@ -5,7 +5,7 @@ Date created:
     11/2021
 
 Date edited:
-    02/2022
+    03/2022
 
 Author:
     Filip J. Cierkosz
@@ -29,20 +29,13 @@ class GridSelectionWindow:
             Parameters:
                 self
         '''
-        # Define the dimensions of the window.
         self.HEIGHT = 200
         self.WIDTH = 500
-        # Initialize the pygame module.
         pygame.init()
-        # Set the title of the window.
         pygame.display.set_caption("2048: GRID SELECTION")
-        # Initialize the font.
         pygame.font.init()
         self.font = pygame.font.SysFont(FONT_BOARD[0], FONT_SIZES['select'], FONT_BOARD[1])
-        # Create the window for the class.
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        # User response which will be used later to determine grid size.
-        # By default, it is set to 4.
         self.response = '4'
         # Initially, the game window does not show up. The selection grid
         # window disappears and the game window appears when the user clicks
@@ -77,18 +70,17 @@ class GridSelectionWindow:
                     # If required, clear user's input
                     elif (event.key==K_BACKSPACE):
                         self.response = self.response[:-1]
-                    # If user clicks enter and the numerical value is appropriate,
-                    # the game starts.
+                    # If user clicks enter and numerical value is correct, the game starts.
                     elif (event.key==K_RETURN and self.response in '3456'):
                         self.playGame = True
                         return 
                 elif (event.type==QUIT):
                     return
 
-            # Set the background color.
+            # Set background color.
             self.window.fill(GRID_COLOR)
 
-            # Display all the instructions to the user.
+            # Display all the instructions.
             textArea = self.font.render('WELCOME TO THE 2048 GAME!', True, WINDOW_FONT_COLOR)
             self.window.blit(textArea, textArea.get_rect(center=(250,30)))
             textArea = self.font.render('INPUT GRID SIZE (3/4/5/6)', True, WINDOW_FONT_COLOR)
