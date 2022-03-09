@@ -15,7 +15,7 @@
 
 ##
 
-2. Implementation 2 <i>~ aimed to be solved by an AI bot<i>
+2. Implementation 2 <i>~ aimed to be solved by an AI bot</i>
 
 - The game automatically initializes with a 4x4 grid and so there is no grid selection.
 - The grid is initialized with 2 random numbers (either 1 (highest probability rate), 2 or 4).
