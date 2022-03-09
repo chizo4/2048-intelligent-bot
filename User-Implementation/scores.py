@@ -133,4 +133,4 @@ def printRecordsDB():
 #initDB()
 
 # Display all the database records.
-#printRecordsDB()
+printRecordsDB()
