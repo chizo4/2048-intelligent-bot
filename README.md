@@ -4,7 +4,7 @@
 
 ##
 
-1. Implementation 1 - aimed to be played by a human user.
+1. Implementation 1 <i>~ aimed to be played by a human user</i>
   
 - The user might select a grid 3x3, 4x4, 5x5, or 6x6. 
 - The grid is initialized with 2 random numbers (either 1 (highest probability rate), 2 or 4).
@@ -15,7 +15,7 @@
 
 ##
 
-2. Implementation 2 - aimed to be solved by an AI bot.
+2. Implementation 2 <i>~ aimed to be solved by an AI bot<i>
 
 - The game automatically initializes with a 4x4 grid and so there is no grid selection.
 - The grid is initialized with 2 random numbers (either 1 (highest probability rate), 2 or 4).
