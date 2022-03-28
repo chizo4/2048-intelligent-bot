@@ -10,7 +10,7 @@
 
 
 <p align="center">
-  <img src="imageGUI.png" alt="drawing" width="400" alt="The Image of 2048 Game Board."/>
+  <img src="imageGUI.png" width="400" alt="The Image of 2048 Game Board."/>
 </p>
 
 ##
