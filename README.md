@@ -23,6 +23,7 @@
 - The game itself is controlled by the user using arrow keys.
 - The aim is to obtain the highest possible power of 2 in the board, i.e. the game goes further than 2048.
 - The user's scores for each grid are stored in an SQLITE database, and are processed using pandas.
+- Additionally, the implementation contains a Jupyter Notebook for simple analysis of the data collected in the database.
 
 #### Running the Implemenation 1: navigate to the right directory (from the project root directory); then, run the main Python file.
 
