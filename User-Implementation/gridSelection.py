@@ -71,7 +71,7 @@ class GridSelectionWindow:
                     elif (event.key==K_BACKSPACE):
                         self.response = self.response[:-1]
                     # If user clicks enter and numerical value is correct, the game starts.
-                    elif (event.key==K_RETURN and self.response in '3456'):
+                    elif (event.key==K_RETURN and self.response in '3456' and self.response!=''):
                         self.playGame = True
                         return 
                 elif (event.type==QUIT):
