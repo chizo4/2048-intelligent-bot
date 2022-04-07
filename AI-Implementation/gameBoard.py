@@ -179,12 +179,7 @@ class Game2048:
 
         # Append the new value in the grid.
         for c in random.sample(availableCoords, k=n):
-            if (random.random()<0.05):
-                self.grid[c] = 4
-            elif (random.random()<0.2):
-                self.grid[c] = 2
-            else:
-                self.grid[c] = 1
+            self.grid[c] = 2
 
     def makeMove(self, move):
         '''
@@ -340,10 +335,6 @@ class Game2048:
 
             # Get the user keyboard response.
             kbdResponse = self.listenForKeyPress()
-
-            # The game stops if the user triggers 'q' or escape the game.
-            if (kbdResponse=='stop'):
-                break
 
             # Make a copy of the old grid.
             oldGrid = self.grid.copy()
