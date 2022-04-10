@@ -324,12 +324,12 @@ class GameBot:
             # Make a copy of the old grid.
             oldGrid = self.grid.copy()
 
-            # SPECIFY A RANDOM MOVE.
-            moveSelected = self.randomMove()
+            # SPECIFY A SEARCHED MOVE.
+            moveSelected = self.searchMove()
             
             # Execute the AI selected move.
             self.makeMove(moveSelected)
-            #sleep(0.1)
+            #sleep(3.0) # disable this feature later
             
             # Check if it is possible to continue the game.
             if (self.checkIfOver()):
@@ -356,91 +356,71 @@ class GameBot:
                 self.insertNewNum()
 
     # TESTING STAGE, still in progress.
-    '''def botSearchedMove(self):
-        #moves = ['right', 'left', 'up', 'down']
-        #choice = np.random.choice(moves, 1)
-        #return choice
+    def searchMove(self):
+        searchDepth = 6
+        #scores = np.zeros(4)
+        scores = {mv: 0 for mv in self.moves}
+        currGrid = self.grid.copy()
 
-        searchesPerMove = 4
-        searchLength = 4
+        # test each available move
+        # for each move create sample random search 
 
-        scores = np.zeros[4]
+        for mv in self.moves:
+            # make the move
+            self.makeMove(mv)
+            print(f'checking move {mv}')
 
-        for firstIndex in range(4):
-            # Specify the first move.
-            firstMove = self.moves[firstIndex]
-
-            # Invoke the very first move.
-            self.makeMove(firstMove)
-
-            # Check if game would be over after this move.
-            over = self.checkIfOver()
-
-            # Update the score.
-            self.updateScore()
-            firstScore = self.score
-
-            if (not over):
-                # Append new number in the grid.
+            if (not self.checkIfOver()):
+                # append new num
                 self.insertNewNum()
                 
-                # Update the array with a new score.
-                scores[firstIndex] = firstScore
-            else:
-                continue
+                # perform random moves
+                for i in range(searchDepth):
+                    # select random move
+                    mvRandom = self.randomMove()
 
-        # Specify the best move and return.
-        bestMoveIndex = np.argmax(scores)
+                    # perform random move
+                    self.makeMove(mvRandom)
 
-
-
-
-
-
-
-        #-----------
-
-        searchesPerMove = 10
-        searchLength = 10
-
-        firstMoves = self.moves
-        scores = np.zeros(4)
-
-        for firstIndex in range(4):
-            firstMove = firstMoves[firstIndex]
-
-            self.makeMove(firstMove)
-
-            firstBoard = self.grid
-            firstGameOver = self.checkIfOver()
-            self.updateScore()
-            firstScore = self.score
-
-            if (not firstGameOver):
-                self.insertNewNum()
-                firstBoard = self.grid
-                scores[firstIndex] += firstScore
-            else: 
-                continue
-
-            for laterMoves in range(searchesPerMove):
-                moveNumber = 1
-                searchBoard = np.copy(firstBoard)
-                isValid = True
-
-                while isValid and moveNumber<searchLength:
-                    self.randomMove()
-
-                    if not self.checkIfOver:
+                    # check if over
+                    if (not self.checkIfOver()):
                         self.insertNewNum()
-                        searchBoard = self.grid
-                        self.updateScore()
-                        scores[firstIndex] += self.score
-                        moveNumber += 1
+                    # if the game is over, stop the loop
+                    else: 
+                        break
 
-        bestMoveIndex = np.argmax(scores)
-        bestMove = firstMoves[bestMoveIndex]
-        return bestMove'''
+
+            # equal = (self.grid==oldGrid).all()
+
+            if ((self.grid==currGrid).all()):
+                scores[mv] = 0
+            else:
+                # update the dict with the maximum possible score to be obtained
+                scores[mv] = np.max(self.grid)
+                
+
+            # reset the grid for the next move
+            self.grid = currGrid.copy()
+
+        
+        boolX = True
+        #if (not boolX):
+        #if (len(set(scores.values()))==1):
+        if (all(val == 0 for val in scores.values())):
+            mvBest = random.choice(list(scores.values()))
+        else: 
+            # select the best move, key with max value
+            mvBest = max(scores, key=scores.get)
+
+        # reset the grid to the starting state
+        self.grid = currGrid
+        # return the best move to select
+        print(mvBest)
+        return mvBest
+
+
+
+
 
                     
 
