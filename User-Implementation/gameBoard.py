@@ -184,7 +184,7 @@ class Game2048:
                 num = self.grid[r][c]
                 
                 # If a number on the grid is greater or equal to 2048, it will not
-                # change anymore, since dictionary has colors up to tha value of 2048.
+                # change anymore, since dictionary has colors up to the value of 2048.
                 if (num>=2048):
                     color = CELL_COLORS[2048]
                 else:

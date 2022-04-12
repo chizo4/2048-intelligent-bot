@@ -1,11 +1,11 @@
 '''
-2048 GAME PROJECT: Graphics adjustments (AI).
+2048 GAME PROJECT: Graphics adjustments (AI version).
 
 Date created: 
     11/2021
 
 Date edited:
-    03/2022
+    04/2022
 
 Author:
     Filip J. Cierkosz
@@ -42,7 +42,7 @@ CELL_COLORS = {
 
 # Dictionary of font sizes.
 FONT_SIZES = {
-    '4':35,
+    '5':35,
     'finalMsg':30,
     'score':25,
 }
