@@ -410,7 +410,6 @@ class GameBot:
         self.grid = origGrid.copy()
 
         # Find and return the best searched move.
-        print(costs)
         bestMv = max(costs, key=costs.get)
         return bestMv
         
