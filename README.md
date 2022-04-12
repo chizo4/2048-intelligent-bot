@@ -37,11 +37,11 @@ python main.py
 
 ##
 
-2. Implementation 2 [STILL BEING DEVELOPED] <i>~ aimed to be solved by an AI bot</i>
+2. Implementation 2 [STILL UNDER DEVELOPMENT] <i>~ aimed to be solved by an AI bot</i>
 
-- 12/04/2022 - Development update: The AI bot is able to win the game on 5x5 grid in about 15-20 sec. Nevertheless, still struggles to exceed the value of 1024 on 4x4 grid.
+- <b>12/04/2022 Development Update: The AI bot is able to win the game on 5x5 grid in about 15-20 sec. Nevertheless, still struggles to exceed the value of 1024 on 4x4 grid.</b>
 - The game automatically initializes with a specified grid size and so there is no grid selection.
-- The only value appened in the grid is 2 (100% probability).
+- The only value inserted into the grid is 2 (100% probability).
 - The game is controlled by the AI bot (performing appropriate searching algorithms).
 - The aim for the bot is to obtain at one square with the value of 2048 in the 4x4 grid.
 - The game is terminated when the bot reaches the score of 2048, which denotes a goal state.
