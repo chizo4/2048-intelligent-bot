@@ -5,7 +5,7 @@ Date created:
     11/2021
 
 Date edited:
-    03/2022
+    05/2022
 
 Author:
     Filip J. Cierkosz
@@ -16,8 +16,8 @@ import numpy as np
 import pygame
 from pygame.locals import *
 from time import sleep, time
-from graphics import GRID_COLOR, CELL_COLORS, GRID_FONT_COLOR, FONT_BOARD, FONT_SIZES, USER_FONT_COLOR, WINDOW_FONT_COLOR
-from scores import getGridBestScore
+from graphics import *
+from scores import get_grid_best_score
 
 class Game2048:
     '''
@@ -27,7 +27,7 @@ class Game2048:
     '''
     def __init__(self, gs):
         '''
-        Constructor to initialize an appropriately-sized grid for the game and set all attributes.
+        Constructor to initialize an appropriately-sized grid for the game with all attributes.
 
             Parameters:
                 self
@@ -37,32 +37,28 @@ class Game2048:
         self.GRID_SIZE = gs
         self.score = 0
         self.timer = 0
-        self.currBestScore = getGridBestScore(gs)
+        self.curr_best_score = get_grid_best_score(gs)
         self.grid = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
         self.HEIGHT = 540
         self.WIDTH = 500
-        # Space at the top of GUI that is left to display time and score.
         self.TOP_SPACE = self.HEIGHT-self.WIDTH
-        # Space between squares in the grid.
         self.SPACE = 5
         self.SQUARE_SIZE = (self.WIDTH-(self.GRID_SIZE+1)*self.SPACE)/self.GRID_SIZE
-        # Initialize pygame.
         pygame.init()
         pygame.display.set_caption("2048: GAME")
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        # Initialize all the fonts for the game.
         pygame.font.init()
-        self.fontGame = pygame.font.SysFont(FONT_BOARD[0], 
+        self.font_game = pygame.font.SysFont(FONT_BOARD[0], 
                                             FONT_SIZES[f'{self.GRID_SIZE}'], 
                                             FONT_BOARD[1])
-        self.fontScore = pygame.font.SysFont(FONT_BOARD[0],
+        self.font_score = pygame.font.SysFont(FONT_BOARD[0],
                                              FONT_SIZES['score'], 
                                              FONT_BOARD[1])
-        self.fontMsg = pygame.font.SysFont(FONT_BOARD[0],
+        self.font_msg = pygame.font.SysFont(FONT_BOARD[0],
                                            FONT_SIZES['finalMsg'],
                                            FONT_BOARD[1])
 
-    def getScore(self):
+    def get_score(self):
         '''
         Accessor for the score.
 
@@ -74,7 +70,7 @@ class Game2048:
         '''
         return self.score
 
-    def getTime(self):
+    def get_time(self):
         '''
         Accessor for the time that elapsed while playing the game.
 
@@ -86,7 +82,7 @@ class Game2048:
         '''
         return self.timer
 
-    def getGridSize(self):
+    def get_grid_size(self):
         '''
         Accessor for the current grid size.
 
@@ -99,7 +95,7 @@ class Game2048:
         return self.GRID_SIZE
 
     @staticmethod
-    def updateArr(curr, self):
+    def update_arr(curr):
         '''
         Returns an updated array for row/column of the grid.
 
@@ -115,7 +111,6 @@ class Game2048:
         new = []
         skip = False
 
-        # Iterate through the elements of the temp array.
         for i in range(len(temp)):
             # Skip an element that was just added (so that it is not repeated).
             if (skip):
@@ -136,7 +131,7 @@ class Game2048:
         return np.array(new)
 
     @staticmethod
-    def listenForKeyPress():
+    def listen_for_key_press():
         '''
         Listens for the user keyboard press.
                 
@@ -148,16 +143,12 @@ class Game2048:
                 if (event.type==QUIT):
                     return 'stop' 
                 if (event.type==KEYDOWN):
-                    # Left arrow press.
                     if (event.key==K_LEFT):
                         return 'left'
-                    # Right arrow press.
                     elif (event.key==K_RIGHT):
                         return 'right'
-                    # Up arrow press.
                     elif (event.key==K_UP):
                         return 'up'
-                    # Down arrow press.
                     elif (event.key==K_DOWN):
                         return 'down'
                     elif (event.key==K_q or event.key==K_ESCAPE):
@@ -176,7 +167,6 @@ class Game2048:
         # Iterate in order to display squares in the grid.
         for r in range(self.GRID_SIZE):
             for c in range(self.GRID_SIZE):
-                # Define the coordinates for the current square to draw.
                 x = (c+1)*self.SPACE+c*self.SQUARE_SIZE
                 y = self.TOP_SPACE+(r+1)*self.SPACE+r*self.SQUARE_SIZE
 
@@ -191,17 +181,17 @@ class Game2048:
                     color = CELL_COLORS[num]
 
                 # Draw the square in the grid.
-                pygame.draw.rect(self.window,
-                                color,
+                pygame.draw.rect(self.window, color,
                                 pygame.Rect(x,y,self.SQUARE_SIZE,self.SQUARE_SIZE),
                                 border_radius=8)
 
                 # Display numbers for each square. Do NOT draw zeros.
                 if (num!=0):
-                    textArea = self.fontGame.render(f'{num}', True, GRID_FONT_COLOR)
-                    self.window.blit(textArea, textArea.get_rect(center=(x+self.SQUARE_SIZE/2, y+self.SQUARE_SIZE/2)))
+                    text_area = self.font_game.render(f'{num}', True, GRID_FONT_COLOR)
+                    self.window.blit(text_area, 
+                                     text_area.get_rect(center=(x+self.SQUARE_SIZE/2, y+self.SQUARE_SIZE/2)))
 
-    def insertNewNum(self, n=1):
+    def insert_new_num(self, n=1):
         '''
         Updates a grid with a new number.
 
@@ -211,15 +201,14 @@ class Game2048:
                 self
                 n=1 (int) : Quantity of new numbers to append.
         '''
-        availableCoords = []
+        available_coords = []
 
         for row, col in np.ndindex(self.grid.shape):
-            # If the value is equal to 0, it means it is available.
             if (self.grid[row][col]==0):
-                availableCoords.append((row, col))
+                available_coords.append((row, col))
 
         # Append the new value in the grid.
-        for c in random.sample(availableCoords, k=n):
+        for c in random.sample(available_coords, k=n):
             if (random.random()<0.05):
                 self.grid[c] = 4
             elif (random.random()<0.2):
@@ -227,7 +216,7 @@ class Game2048:
             else:
                 self.grid[c] = 1
 
-    def makeMove(self, move):
+    def make_move(self, move):
         '''
         Makes a move on the board based on the user keyboard press.
 
@@ -253,7 +242,7 @@ class Game2048:
                 curr = self.grid[:, i][::-1]
 
             # Update the row/column. Add any elements (if possible).
-            new = self.updateArr(curr, self)
+            new = self.update_arr(curr)
 
             # Update the grid for the move to the left or up.
             if (move=='left'):
@@ -269,7 +258,7 @@ class Game2048:
             elif (move=='down'):
                 self.grid[:, i] = new[::-1]
 
-    def updateScore(self):
+    def update_score(self):
         '''
         Updates the score. 
         
@@ -280,7 +269,7 @@ class Game2048:
         '''
         self.score = np.max(self.grid)
 
-    def checkIfOver(self):
+    def check_if_over(self):
         '''
         Checks if the game is over.
 
@@ -291,26 +280,22 @@ class Game2048:
                 True/False (boolean) : True if game is over; False otherwise.
         '''
         original = self.grid.copy()
-
-        # Possible moves on the grid.
         moves = ['right', 'left', 'up', 'down']
 
         for mv in moves:
-            self.makeMove(mv)
+            self.make_move(mv)
 
             # Check if the grids are equal after invoking a move.
             equal = (self.grid==original).all()
 
-            # If the grids are not equal, it means it is possible to 
-            # continue the game. Since, there are still available moves to make.
+            # If the grids are not equal, it means it is possible to continue.
             if (not equal):
                 self.grid = original
                 return False
 
-        # If none of the moves changes the state of the grid, it denotes the user loses.
         return True
 
-    def setTimer(self):
+    def set_timer(self):
         '''
         Sets the timer.
 
@@ -323,7 +308,7 @@ class Game2048:
         start = time()
         return start
 
-    def stopTimer(self, start):
+    def stop_timer(self, start):
         '''
         Stops the timer and returns the time of execution.
 
@@ -335,8 +320,8 @@ class Game2048:
                 executionTime (time) : Time of execution.
         '''
         stop = time()
-        executionTime = stop-start
-        return executionTime
+        execution_time = stop-start
+        return execution_time
 
     def play(self):
         '''
@@ -346,65 +331,62 @@ class Game2048:
                 self
         '''
         # Initialize the board with 2 starting numbers in the grid.
-        self.insertNewNum(n=2)
-
-        start = self.setTimer()
+        self.insert_new_num(n=2)
+        start = self.set_timer()
 
         # Play as long as the game is neither over, nor quit by the user.
         while (True):
-            # Draw the board, update and display the current score.
             self.draw()
-            self.updateScore()
-            textArea = self.fontScore.render(f'SCORE: {self.score:06d}', True, WINDOW_FONT_COLOR)
-            self.window.blit(textArea, textArea.get_rect(center=(115,20)))
-
-            # Update the screen.
+            self.update_score()
+            text_area = self.font_score.render(f'SCORE: {self.score:06d}', True, WINDOW_FONT_COLOR)
+            self.window.blit(text_area, text_area.get_rect(center=(115,20)))
             pygame.display.flip()
 
             # Get the user keyboard response.
-            kbdResponse = self.listenForKeyPress()
+            kbd_response = self.listen_for_key_press()
 
             # The game stops if the user triggers 'q' or escape the game.
-            if (kbdResponse=='stop'):
+            if (kbd_response=='stop'):
                 break
 
-            # Make a copy of the old grid.
-            oldGrid = self.grid.copy()
+            old_grid = self.grid.copy()
             
             # Execute the user command.
-            self.makeMove(kbdResponse)
+            self.make_move(kbd_response)
             
-            # Check if it is possible to continue the game.
-            if (self.checkIfOver()):
+            if (self.check_if_over()):
                 self.window.fill((GRID_COLOR))
-                self.timer = self.stopTimer(start)
+                self.timer = self.stop_timer(start)
 
-                # Show the final message, time played, scores to the user.
-                textArea = self.fontMsg.render('GAME OVER!', True, WINDOW_FONT_COLOR)
-                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-120)))
-                textArea = self.fontMsg.render(f'TIME PLAYED: {self.timer:.1f} SEC', True, WINDOW_FONT_COLOR)
-                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
-                textArea = self.fontMsg.render(f'YOUR SCORE: {self.score}', True, WINDOW_FONT_COLOR)
-                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
+                text_area = self.font_msg.render('GAME OVER!', True, WINDOW_FONT_COLOR)
+                self.window.blit(text_area, 
+                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-120)))
+                text_area = self.font_msg.render(f'TIME PLAYED: {self.timer:.1f} SEC', 
+                                                 True, WINDOW_FONT_COLOR)
+                self.window.blit(text_area, 
+                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
+                text_area = self.font_msg.render(f'YOUR SCORE: {self.score}', True, WINDOW_FONT_COLOR)
+                self.window.blit(text_area, 
+                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
 
-                # If the user beats the current best score, display appropriate message.
-                if (self.score>int(self.currBestScore)):
-                    textArea = self.fontMsg.render(f'NEW BEST SCORE: {self.score}', True, USER_FONT_COLOR)
-                    self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
-                # Otherwise, display the current best score.
+                # Notice to the user if the best score was beaten.
+                if (self.score>int(self.curr_best_score)):
+                    text_area = self.font_msg.render(f'NEW BEST SCORE: {self.score}', 
+                                                     True, USER_FONT_COLOR)
+                    self.window.blit(text_area,
+                                     text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
                 else:
-                    textArea = self.fontMsg.render(f'BEST SCORE: {self.currBestScore}', True, WINDOW_FONT_COLOR)
-                    self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
+                    text_area = self.font_msg.render(f'BEST SCORE: {self.curr_best_score}', 
+                                                     True, WINDOW_FONT_COLOR)
+                    self.window.blit(text_area, 
+                                     text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
                 
-                # Update the window.
+                # Update the final screen and display it for 5 seconds before exiting.
                 pygame.display.flip()
-
-                # Wait 5 seconds to display the final screen. Then, terminate the program.
                 sleep(5)
                 break
 
-            # Check if the grids are equal. If the grids differ insert a new number.
-            equal = (self.grid==oldGrid).all()
+            equal = (self.grid==old_grid).all()
 
             if (not equal):
-                self.insertNewNum()
+                self.insert_new_num()

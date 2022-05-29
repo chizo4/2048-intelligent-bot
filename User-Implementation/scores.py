@@ -11,7 +11,7 @@ Author:
 import sqlite3
 import pandas as pd
 
-def initDB():
+def init_db():
     '''
     Initializes the database to store: user's ID, grid size, score, time played, date.
     '''
@@ -35,7 +35,7 @@ def initDB():
     db.close()
     print('The DB has been successfully initialized.')
 
-def updateDB(id, gs, sc, tsec, dt):
+def update_db(id, gs, sc, tsec, dt):
     '''
     Updates the database inserting a new row.
     '''
@@ -47,13 +47,13 @@ def updateDB(id, gs, sc, tsec, dt):
             cursor = db.cursor()
 
             # Refine the data to be inserted.
-            insertWithParams = '''INSERT INTO scores
-                                (id, grid_size, score, time_played_sec, date_played)
-                                VALUES (?, ?, ?, ?, ?);'''
-            dataInsert = (id, gs, sc, tsec, dt)
+            insert_with_params = '''INSERT INTO scores
+                                    (id, grid_size, score, time_played_sec, date_played)
+                                    VALUES (?, ?, ?, ?, ?);'''
+            data = (id, gs, sc, tsec, dt)
 
             # Execute the operation with specified params. Then, commit and close the DB.
-            cursor.execute(insertWithParams, dataInsert)
+            cursor.execute(insert_with_params, data)
             db.commit()
             db.close()
             print(f'''The DB has been successfully updated with new data:
@@ -64,13 +64,12 @@ def updateDB(id, gs, sc, tsec, dt):
                     time_played_sec : {tsec},
                     date_played : {dt}
                     ''')
-        # Error handling.
         except sqlite3.Error as e:
             print(f'Failed to update the DB. An error occurred:\n', e)
     else:
         print('No updates to the DB.')
 
-def countDBRows():
+def count_db_rows():
     '''
     Counts the rows in the database to assign ID number to a new input.
 
@@ -86,11 +85,10 @@ def countDBRows():
         counter = cursor.fetchone()[0]
         db.close()
         return counter
-    # Error handling.
     except sqlite3.Error as e:
         print(f'Failed to count the DB rows. An error occurred:\n', e)
 
-def getGridBestScore(gs):
+def get_grid_best_score(gs):
     '''
     Finds the best score recorded in the database for an input grid size.
 
@@ -112,11 +110,10 @@ def getGridBestScore(gs):
         if (not best.empty): return best.values[0][2]
 
         return 0
-    # Error handling
     except sqlite3.Error as e:
         print(f'Failed to retrieve the DB data. An error occurred:\n', e)
 
-def printRecordsDB():
+def print_records_db():
     '''
     Displays the database records using pandas dataframe.
     '''
@@ -125,7 +122,6 @@ def printRecordsDB():
         db = sqlite3.connect('scores.db')
         df = pd.read_sql_query("SELECT * FROM scores", db)
         print(df.to_string())
-    # Error handling.
     except sqlite3.Error as e:
         print(f'Failed to process the DB. An error occurred:\n', e)
 
@@ -133,4 +129,4 @@ def printRecordsDB():
 #initDB()
 
 # Display all the database records.
-printRecordsDB()
+print_records_db()

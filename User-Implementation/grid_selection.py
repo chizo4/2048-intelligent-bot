@@ -5,7 +5,7 @@ Date created:
     11/2021
 
 Date edited:
-    03/2022
+    05/2022
 
 Author:
     Filip J. Cierkosz
@@ -13,7 +13,7 @@ Author:
 
 import pygame
 from pygame.locals import *
-from graphics import GRID_COLOR, FONT_BOARD, FONT_SIZES, USER_FONT_COLOR, WINDOW_FONT_COLOR
+from graphics import *
 
 class GridSelectionWindow:
     '''
@@ -34,15 +34,17 @@ class GridSelectionWindow:
         pygame.init()
         pygame.display.set_caption("2048: GRID SELECTION")
         pygame.font.init()
-        self.font = pygame.font.SysFont(FONT_BOARD[0], FONT_SIZES['select'], FONT_BOARD[1])
+        self.font = pygame.font.SysFont(FONT_BOARD[0], 
+                                        FONT_SIZES['select'], 
+                                        FONT_BOARD[1])
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.response = '4'
         # Initially, the game window does not show up. The selection grid
         # window disappears and the game window appears when the user clicks
         # enter after inputting an appropriate grid size.
-        self.playGame = False
+        self.play_game = False
 
-    def getResponse(self):
+    def get_response(self):
         '''
         Accessor for the user's response.
 
@@ -54,7 +56,7 @@ class GridSelectionWindow:
         '''
         return self.response
 
-    def promptUser(self):
+    def prompt_user(self):
         '''
         Gets the user response, which defines the size of the grid.
 
@@ -72,7 +74,7 @@ class GridSelectionWindow:
                         self.response = self.response[:-1]
                     # If user clicks enter and numerical value is correct, the game starts.
                     elif (event.key==K_RETURN and self.response in '3456' and self.response!=''):
-                        self.playGame = True
+                        self.play_game = True
                         return 
                 elif (event.type==QUIT):
                     return
@@ -81,16 +83,13 @@ class GridSelectionWindow:
             self.window.fill(GRID_COLOR)
 
             # Display all the instructions.
-            textArea = self.font.render('WELCOME TO THE 2048 GAME!', True, WINDOW_FONT_COLOR)
-            self.window.blit(textArea, textArea.get_rect(center=(250,30)))
-            textArea = self.font.render('INPUT GRID SIZE (3/4/5/6)', True, WINDOW_FONT_COLOR)
-            self.window.blit(textArea, textArea.get_rect(center=(250,75)))
-            textArea = self.font.render('AND CLICK ENTER:', True, WINDOW_FONT_COLOR)
-            self.window.blit(textArea, textArea.get_rect(center=(250,120)))
+            text_area = self.font.render('WELCOME TO THE 2048 GAME!', True, WINDOW_FONT_COLOR)
+            self.window.blit(text_area, text_area.get_rect(center=(250,30)))
+            text_area = self.font.render('INPUT GRID SIZE (3/4/5/6)', True, WINDOW_FONT_COLOR)
+            self.window.blit(text_area, text_area.get_rect(center=(250,75)))
+            text_area = self.font.render('AND CLICK ENTER:', True, WINDOW_FONT_COLOR)
+            self.window.blit(text_area, text_area.get_rect(center=(250,120)))
 
-            # Space for the user input.
-            textArea = self.font.render(self.response, True, USER_FONT_COLOR)
-            self.window.blit(textArea, textArea.get_rect(center=(250,165)))
-
-            # Update the screen.
+            text_area = self.font.render(self.response, True, USER_FONT_COLOR)
+            self.window.blit(text_area, text_area.get_rect(center=(250,165)))
             pygame.display.flip()
