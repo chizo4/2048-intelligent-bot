@@ -11,11 +11,10 @@ Author:
 from bot import GameBot
 
 def main():
-    '''
-    Run an instance of the bot.
-    '''
+    #for i in range(10):
     bot = GameBot()
     bot.play()
+    print(bot.score)
 
 if (__name__=='__main__'):
     main()

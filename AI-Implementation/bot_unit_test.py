@@ -13,12 +13,12 @@ import unittest
 
 # Unit test cases to check if bot always wins the game.
 class TestBot(unittest.TestCase):
-        def testBot(self):
+        def test_bot(self):
             '''
             Instantiates the bot and plays the game 10 times.
             The test will pass only if the bot wins all the game attempts.
             '''
-            for i in range(10):
+            for i in range(3):
                 bot = GameBot()
                 self.assertTrue(bot.play())
 
