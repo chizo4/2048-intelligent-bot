@@ -16,7 +16,7 @@ import numpy as np
 import pygame
 from pygame.locals import *
 from time import sleep, time
-from graphics import GRID_COLOR, CELL_COLORS, GRID_FONT_COLOR, FONT_BOARD, FONT_SIZES, WINDOW_FONT_COLOR #come back here!!!
+from graphics import *
 
 class GameBot:
     '''
