@@ -5,7 +5,7 @@ Date created:
     03/2022
 
 Date edited:
-    04/2022
+    05/2022
 
 Author:
     Filip J. Cierkosz
@@ -16,7 +16,7 @@ import numpy as np
 import pygame
 from pygame.locals import *
 from time import sleep, time
-from graphics import GRID_COLOR, CELL_COLORS, GRID_FONT_COLOR, FONT_BOARD, FONT_SIZES, WINDOW_FONT_COLOR
+from graphics import GRID_COLOR, CELL_COLORS, GRID_FONT_COLOR, FONT_BOARD, FONT_SIZES, WINDOW_FONT_COLOR #come back here!!!
 
 class GameBot:
     '''
@@ -26,43 +26,39 @@ class GameBot:
     '''
     def __init__(self):
         '''
-        Constructor to initialize an appropriately-sized grid for the game and set all attributes.
+        Constructor to initialize an appropriately-sized grid for the game with all attributes.
 
             Parameters:
                 self
         '''
-        # Permitted moves on the grid.
         self.moves = ['right', 'left', 'up', 'down']
-        # Default grid size.
-        self.GRID_SIZE = 5
+        self.GRID_SIZE = 5 
         self.grid = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
         self.score = 0
         self.timer = 0
+
         # GUI adjustments.
         self.HEIGHT = 540
         self.WIDTH = 500
-        # Space at the top of GUI that is left to display time and score.
         self.TOP_SPACE = self.HEIGHT-self.WIDTH
-        # Space between squares in the grid.
         self.SPACE = 5
         self.SQUARE_SIZE = (self.WIDTH-(self.GRID_SIZE+1)*self.SPACE)/self.GRID_SIZE
         pygame.init()
         pygame.display.set_caption("2048: GAME")
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        # Initialize all the fonts for the game.
         pygame.font.init()
-        self.fontGame = pygame.font.SysFont(FONT_BOARD[0], 
+        self.font_game = pygame.font.SysFont(FONT_BOARD[0], 
                                             FONT_SIZES[f'{self.GRID_SIZE}'], 
                                             FONT_BOARD[1])
-        self.fontScore = pygame.font.SysFont(FONT_BOARD[0],
+        self.font_score = pygame.font.SysFont(FONT_BOARD[0],
                                              FONT_SIZES['score'], 
                                              FONT_BOARD[1])
-        self.fontMsg = pygame.font.SysFont(FONT_BOARD[0],
+        self.font_msg = pygame.font.SysFont(FONT_BOARD[0],
                                            FONT_SIZES['finalMsg'],
                                            FONT_BOARD[1])
 
     @staticmethod
-    def updateArr(curr, self):
+    def update_arr(curr, self):
         '''
         Returns an updated array for row/column of the grid.
 
@@ -73,12 +69,10 @@ class GameBot:
             Returns:
                 new (np.array) : Updated column/row to the grid.
         '''
-        # Append all the non-zero elements of the curr array.
         temp = [n for n in curr if (n!=0)]
         new = []
         skip = False
 
-        # Iterate through the elements of the temp array.
         for i in range(len(temp)):
             # Skip an element that was just added (so that it is not repeated).
             if (skip):
@@ -105,13 +99,11 @@ class GameBot:
             Parameters:
                 self
         '''
-        # Set the background color.
         self.window.fill((GRID_COLOR))
 
-        # Iterate in order to display squares in the grid.
+        # Iterate in order to display squares in the NxN grid.
         for r in range(self.GRID_SIZE):
             for c in range(self.GRID_SIZE):
-                # Define the coordinates for the current square to draw.
                 x = (c+1)*self.SPACE+c*self.SQUARE_SIZE
                 y = self.TOP_SPACE+(r+1)*self.SPACE+r*self.SQUARE_SIZE
 
@@ -119,13 +111,12 @@ class GameBot:
                 num = self.grid[r][c]
                 
                 # If a number on the grid is greater or equal to 2048, it will not
-                # change anymore, since dictionary has colors up to the value of 2048.
+                # change anymore, since dictionary has colors up to 2048.
                 if (num>=2048):
                     color = CELL_COLORS[2048]
                 else:
                     color = CELL_COLORS[num]
 
-                # Draw the square in the grid.
                 pygame.draw.rect(self.window,
                                 color,
                                 pygame.Rect(x,y,self.SQUARE_SIZE,self.SQUARE_SIZE),
@@ -133,10 +124,12 @@ class GameBot:
 
                 # Display numbers for each square. Do NOT draw zeros.
                 if (num!=0):
-                    textArea = self.fontGame.render(f'{num}', True, GRID_FONT_COLOR)
-                    self.window.blit(textArea, textArea.get_rect(center=(x+self.SQUARE_SIZE/2, y+self.SQUARE_SIZE/2)))
+                    text_area = self.font_game.render(f'{num}', True, GRID_FONT_COLOR)
+                    self.window.blit(text_area, 
+                                     text_area.get_rect(center=(x+self.SQUARE_SIZE/2, 
+                                     y+self.SQUARE_SIZE/2)))
 
-    def insertNewNum(self, n=1):
+    def insert_new_num(self, n=1):
         '''
         Updates a grid with a new number.
 
@@ -146,18 +139,17 @@ class GameBot:
                 self
                 n (int) : Quantity of new numbers to be inserted.
         '''
-        availableCoords = []
+        available_coords = []
 
         for row, col in np.ndindex(self.grid.shape):
-            # If the value is equal to 0, it means it is available.
             if (self.grid[row][col]==0):
-                availableCoords.append((row, col))
+                available_coords.append((row, col))
 
         # Append the new value in the grid in random available position.
-        for c in random.sample(availableCoords, k=n):
+        for c in random.sample(available_coords, k=n):
             self.grid[c] = 2
 
-    def makeMove(self, move):
+    def make_move(self, move):
         '''
         Makes a move on the board based on the AI choice.
 
@@ -184,7 +176,7 @@ class GameBot:
                 curr = self.grid[:, i][::-1]
 
             # Update the row/column. Add any elements (if possible).
-            new = self.updateArr(curr, self)
+            new = self.update_arr(curr, self)
 
             # Update the grid for the move to the left or up.
             if (move=='left'):
@@ -200,7 +192,7 @@ class GameBot:
             elif (move=='down'):
                 self.grid[:, i] = new[::-1]
 
-    def updateScore(self):
+    def update_score(self):
         '''
         Updates the score. 
         
@@ -211,7 +203,7 @@ class GameBot:
         '''
         self.score = np.max(self.grid)
 
-    def checkIfOver(self):
+    def check_if_over(self):
         '''
         Checks if the game is over.
 
@@ -224,21 +216,19 @@ class GameBot:
         original = self.grid.copy()
 
         for mv in self.moves:
-            self.makeMove(mv)
+            self.make_move(mv)
 
             # Check if the grids are equal after invoking a move.
             equal = (self.grid==original).all()
 
-            # If the grids are not equal, it means it is possible to 
-            # continue the game. Since, there are still available moves to make.
+            # If the grids are not equal, it means it is possible to continue.
             if (not equal):
                 self.grid = original
                 return False
 
-        # If none of the moves changes the state of the grid, it denotes the bot loses.
         return True
 
-    def setTimer(self):
+    def set_timer(self):
         '''
         Sets the timer.
 
@@ -251,7 +241,7 @@ class GameBot:
         start = time()
         return start
 
-    def stopTimer(self, start):
+    def stop_timer(self, start):
         '''
         Stops the timer and returns the time of execution.
 
@@ -263,85 +253,11 @@ class GameBot:
                 executionTime (time) : Time of execution.
         '''
         stop = time()
-        executionTime = stop-start
-        return executionTime
+        execution_time = stop-start
+        return execution_time
 
-    def play(self):
-        '''
-        Main method to play the game.
-
-            Parameters:
-                self
-
-            Returns:
-             True/False (boolean) : True if game is won, False otherwise.
-        '''
-        # Initialize the board with 2 starting numbers in the grid.
-        self.insertNewNum(n=2)
-        start = self.setTimer()
-
-        # Play as long as the game is neither over, nor won by the AI bot.
-        while (True):
-            # Draw the board, update and display the current score.
-            self.draw()
-            self.updateScore()
-            textArea = self.fontScore.render(f'SCORE: {self.score:06d}', True, WINDOW_FONT_COLOR)
-            self.window.blit(textArea, textArea.get_rect(center=(115,20)))
-
-            # Update the screen.
-            pygame.display.flip()
-
-            # If the AI bot reaches the goal state, i.e. score: 2048, it denotes win.
-            if (self.score==2048):
-                self.window.fill((GRID_COLOR))
-                self.timer = self.stopTimer(start)
-
-                # Display the final message.
-                textArea = self.fontMsg.render(f'BOT WON THE GAME!', True, WINDOW_FONT_COLOR)
-                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
-                textArea = self.fontMsg.render(f'TIME PLAYED: {self.timer:.1f} SEC', True, WINDOW_FONT_COLOR)
-                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
-
-                # Update the window.
-                pygame.display.flip()
-
-                # Wait 1 second to display the final screen.
-                sleep(1)
-                return True
-
-            # Make a copy of the old grid.
-            oldGrid = self.grid.copy()
-
-            # Determine the best AI-searched move.
-            mv = self.searchMove()
-
-            # Execute the AI selected move.
-            self.makeMove(mv)
-            
-            # Check if it is possible to continue the game after the move.
-            if (self.checkIfOver()):
-                self.window.fill((GRID_COLOR))
-                self.timer = self.stopTimer(start)
-
-                # Display the final message.
-                textArea = self.fontMsg.render(f'BOT LOST.', True, WINDOW_FONT_COLOR)
-                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
-                textArea = self.fontMsg.render(f'TIME PLAYED: {self.timer:.1f} SEC', True, WINDOW_FONT_COLOR)
-                self.window.blit(textArea, textArea.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
-
-                # Update the window.
-                pygame.display.flip()
-
-                # Delay 1 second to display the final screen.
-                sleep(1)
-                return False
-
-            # Check if the grids are equal. If the grids differ insert a new number.
-            if (not (self.grid==oldGrid).all()):
-                self.insertNewNum()
-
-    # STILL IN DEVELOPMENT STAGE!
-    def searchMove(self):
+    # STILL IN DEVELOPMENT STAGE!!!
+    def search_move(self):
         '''
         AI bot searches the best move performing each of the available moves, then
         simulating future states of the game board. Finally, the best move is selected
@@ -356,64 +272,66 @@ class GameBot:
                               grid; either 'right', 'left', 'up', or 'down'.
         '''
         # Make a copy of the initial state of the grid.
-        origGrid = self.grid.copy()
+        orig_grid = self.grid.copy()
 
         # Dictionary to calculate costs per each move, based on scores and empty spots.
         costs = {mv:0 for mv in self.moves}
 
         # Determine the number of searches per one move and the depth of the search.
-        searchesMv = 100
+        searches_mv = 100
         depth = 10
+        #searchesMv = 64
+        #depth = 16
 
         # Test each available move.
         for mv in self.moves:
             # Execute the move, check if possible to continue and get the score.
-            self.makeMove(mv)
-            gameOverMv = self.checkIfOver()
-            scoreMv = np.max(self.grid)
+            self.make_move(mv)
+            game_over_mv = self.check_if_over()
+            score_mv = np.max(self.grid)
 
             # If the game is not over and the move changes the state of the board,
             # insert new number, update scores, and perform the further search.
-            if (not gameOverMv and not (self.grid==origGrid).all()):
-                self.insertNewNum()
-                costs[mv] += scoreMv
-                counterMv = 1
+            if (not game_over_mv and not (self.grid==orig_grid).all()):
+                self.insert_new_num()
+                costs[mv] += score_mv
+                counter_mv = 1
             # Otherwise, restart the grid to the initial state and move to the next move.
             else:
-                self.grid = origGrid.copy()
+                self.grid = orig_grid.copy()
                 continue
 
             # Perform simulation of later moves.
-            for i in range(searchesMv):
-                searchBoard = self.grid.copy()
-                gameOver = False
+            for i in range(searches_mv):
+                search_board = self.grid.copy()
+                game_over = False
 
-                while (not gameOver and counterMv<depth):
-                    searchBoard = self.grid.copy()
+                while (not game_over and counter_mv<depth):
+                    search_board = self.grid.copy()
                     # Execute a random move.
-                    self.makeMove(self.shuffleMove())
-                    gameOver = self.checkIfOver()
-                    simulatedScore = np.max(self.grid)
+                    self.make_move(self.shuffle_move())
+                    game_over = self.check_if_over()
+                    simulated_score = np.max(self.grid)
 
-                    if (not gameOver and not (self.grid==searchBoard).all()):
-                        self.insertNewNum()
-                        costs[mv] += simulatedScore
-                        counterMv += 1
+                    if (not game_over and not (self.grid==search_board).all()):
+                        self.insert_new_num()
+                        costs[mv] += simulated_score
+                        counter_mv += 1
 
                 # Increment the costs by the number of empty spots in the current state of grid.
-                costs[mv] += 10*np.count_nonzero(self.grid==0)
+                costs[mv] += 100*np.count_nonzero(self.grid==0)
             
             # Restart the grid to the initial state for the next move to be tested.
-            self.grid = origGrid.copy()
+            self.grid = orig_grid.copy()
 
         # Finally, restart the grid to the initial state one last time.
-        self.grid = origGrid.copy()
+        self.grid = orig_grid.copy()
 
         # Find and return the best searched move.
-        bestMv = max(costs, key=costs.get)
-        return bestMv
+        best_mv = max(costs, key=costs.get)
+        return best_mv
         
-    def shuffleMove(self):
+    def shuffle_move(self):
         '''
         Shuffles a random move.
 
@@ -424,5 +342,76 @@ class GameBot:
                 randMv : One randomly selected move; either 'right', 'left',
                          'up', or 'down'.
         '''
-        randMv = np.random.choice(self.moves, 1)
-        return randMv
+        return np.random.choice(self.moves, 1)
+
+    def play(self):
+        '''
+        Main method to play the game.
+
+            Parameters:
+                self
+
+            Returns:
+             True/False (boolean) : True if game is won, False otherwise.
+        '''
+        # Initialize the board, with 2 starting numbers in the grid.
+        self.insert_new_num(n=2)
+        start = self.set_timer()
+
+        # Play as long as the game is neither over, nor won by the AI bot.
+        while (True):
+            self.draw()
+            self.update_score()
+            text_area = self.font_score.render(f'SCORE: {self.score:06d}',
+                                               True, WINDOW_FONT_COLOR)
+            self.window.blit(text_area, text_area.get_rect(center=(115,20)))
+            pygame.display.flip()
+
+            # If the AI bot reaches the goal state, i.e. score: 2048, it denotes win.
+            if (self.score==16384):
+                self.window.fill((GRID_COLOR))
+                self.timer = self.stop_timer(start)
+
+                # Display the final message.
+                text_area = self.font_msg.render(f'BOT WON THE GAME!', 
+                                                 True, WINDOW_FONT_COLOR)
+                self.window.blit(text_area, 
+                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
+                text_area = self.font_msg.render(f'TIME PLAYED: {self.timer:.1f} SEC', 
+                                                 True, WINDOW_FONT_COLOR)
+                self.window.blit(text_area, 
+                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
+                pygame.display.flip()
+
+                # Wait 1 second to display the final screen.
+                sleep(1)
+                return True
+
+            # Make a copy of the old grid.
+            old_grid = self.grid.copy()
+
+            # Determine the best AI-searched move and execute it
+            mv = self.search_move()
+            self.make_move(mv)
+            
+            if (self.check_if_over()):
+                self.window.fill((GRID_COLOR))
+                self.timer = self.stop_timer(start)
+
+                # Display the final message.
+                text_area = self.font_msg.render(f'BOT LOST.', 
+                                                 True, WINDOW_FONT_COLOR)
+                self.window.blit(text_area, 
+                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
+                text_area = self.font_msg.render(f'TIME PLAYED: {self.timer:.1f} SEC', 
+                                                 True, WINDOW_FONT_COLOR)
+                self.window.blit(text_area, 
+                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
+                pygame.display.flip()
+
+                # Delay 1 second to display the final screen.
+                sleep(1)
+                return False
+
+            if (not (self.grid==old_grid).all()):
+                self.insert_new_num()
