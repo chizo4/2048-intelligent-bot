@@ -5,7 +5,7 @@ Date created:
     11/2021
 
 Date edited:
-    03/2022
+    06/2022
 
 Author:
     Filip J. Cierkosz
@@ -22,8 +22,7 @@ GRID_FONT_COLOR = '#12023d'
 WINDOW_FONT_COLOR = '#fafafa'
 USER_FONT_COLOR = '#a2ff29'
 
-# Dictionary of colors of cells corresponding with their 
-# numerical values on the board. 
+# Cell colors corresponding with their numerical values on the board. 
 CELL_COLORS = {
     0:'#fafafa',
     1:'#c4beb5',
@@ -40,7 +39,7 @@ CELL_COLORS = {
     2048:'#ffb300',
 }
 
-# Dictionary of font sizes for different sizes of grid.
+# Font sizes for different sizes of grid.
 FONT_SIZES = {
     '3':40,
     '4':35,

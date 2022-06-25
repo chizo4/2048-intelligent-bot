@@ -1,6 +1,6 @@
 # 2048-Project
 
-### Python implementations of the popular 2048 game using the Pygame library (for creating GUI). The directory contains two slightly different applications of the game.
+### Python implementations of the popular 2048 game using the pygame library. The repository contains two slightly different applications of the game.
 
 ##
 
@@ -10,7 +10,7 @@
 
 
 <p align="center">
-  <img src="imageGUI.png" width="400" alt="The Image of 2048 Game Board."/>
+  <img src="./images/image_gui.png" width="400" alt="The Image of 2048 Game Board."/>
 </p>
 
 ##
@@ -21,14 +21,14 @@
 - The grid is initialized with 2 random numbers (either 1 (highest probability rate), 2 or 4).
 - The original game 2048, starts from 2, whereas this example starts from the value of 2<sup>0</sup> instead of 2<sup>1</sup> in order to make it more diffcult - and more CS-friendly!
 - The game itself is controlled by the user using arrow keys.
-- The aim is to obtain the highest possible power of 2 in the board, i.e. the game goes further than 2048.
-- The user's scores for each grid, along with time played and date played, are stored in an SQLITE3 database, and are processed using pandas.
+- The aim is to obtain the highest possible power of 2 in the board, i.e. the game goes further than 2048 and user plays after as long as they do not lose.
+- The user's scores for each grid (along with time played and date played) are stored in an SQLITE3 database; the DB records are processed using pandas.
 - Additionally, the implementation contains a Jupyter Notebook for simple analysis of the data collected in the database using pandas library.
 
-#### Running the Implemenation 1: navigate to the project root directory; then, run the main Python file.
+#### Running the Implemenation 1: navigate to the project root directory; then, run the main Python file (NB: remember to clone the repo beforehand).
 
 ```
-cd User-Implementation/
+cd user_implementation/
 ```
 
 ```
@@ -46,7 +46,7 @@ python main.py
 - The aim for the bot is to obtain at one square with the value of 2048 in the 4x4 grid.
 - The game is terminated when the bot reaches the score of 2048, which denotes a goal state.
 
-#### Running the Implemenation 2: navigate to the right directory (from the project root directory); then, run the main Python file.
+#### Running the Implemenation 2: navigate to the right directory (from the project root directory); then, run the main Python file (NB: again, remember to clone the repo before starting).
 
 ```
 cd AI-Implementation/
