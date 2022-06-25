@@ -4,6 +4,9 @@
 Date created:
     03/2022
 
+Date edited:
+    06/2022
+
 Author:
     Filip J. Cierkosz
 '''
@@ -15,10 +18,8 @@ def init_db():
     '''
     Initializes the database to store: user's ID, grid size, score, time played, date.
     '''
-    db = sqlite3.connect('scores.db')
+    db = sqlite3.connect('db/scores.db')
     cursor = db.cursor()
-
-    # Create the table with defined schema.
     cursor.execute('DROP TABLE IF EXISTS scores')
     cursor.execute('''
                 CREATE TABLE scores (
@@ -29,8 +30,6 @@ def init_db():
                     date_played TEXT
                 )
             ''')
-
-    # Commit the operations and close the DB.
     db.commit()
     db.close()
     print('The DB has been successfully initialized.')
@@ -43,27 +42,21 @@ def update_db(id, gs, sc, tsec, dt):
     # escape the game before losing.
     if (tsec>0):
         try:
-            db = sqlite3.connect('scores.db')
+            db = sqlite3.connect('db/scores.db')
             cursor = db.cursor()
-
-            # Refine the data to be inserted.
             insert_with_params = '''INSERT INTO scores
                                     (id, grid_size, score, time_played_sec, date_played)
                                     VALUES (?, ?, ?, ?, ?);'''
             data = (id, gs, sc, tsec, dt)
-
-            # Execute the operation with specified params. Then, commit and close the DB.
             cursor.execute(insert_with_params, data)
             db.commit()
             db.close()
-            print(f'''The DB has been successfully updated with new data:
-
+            print(f'''The DB has been successfully updated with new data:\n
                     id : {id}
                     grid_size : {gs}
                     score : {sc},
                     time_played_sec : {tsec},
-                    date_played : {dt}
-                    ''')
+                    date_played : {dt}\n''')
         except sqlite3.Error as e:
             print(f'Failed to update the DB. An error occurred:\n', e)
     else:
@@ -77,10 +70,8 @@ def count_db_rows():
             counter (int) : Number of rows in the table (used to assign ID).
     '''
     try:
-        db = sqlite3.connect('scores.db')
+        db = sqlite3.connect('db/scores.db')
         cursor = db.cursor()
-
-        # Count the rows in the DB, close DB and return counter.
         cursor.execute('SELECT COUNT(*) FROM scores')
         counter = cursor.fetchone()[0]
         db.close()
@@ -99,15 +90,15 @@ def get_grid_best_score(gs):
             best (int) : Best score on the currently selected grid.
     '''
     try:
-        # Connect with the DB and execute the query to find results for the grid size.
-        db = sqlite3.connect('scores.db')
+        db = sqlite3.connect('db/scores.db')
         df = pd.read_sql_query(f'SELECT * FROM scores WHERE grid_size = {gs}', db)
 
         # Find the best score among filtered results.
         best = df[df['score']==df['score'].max()]
 
         # If dataframe is not empty, return the score. Otherwise, return 0.
-        if (not best.empty): return best.values[0][2]
+        if (not best.empty):
+            return best.values[0][2]
 
         return 0
     except sqlite3.Error as e:
@@ -118,8 +109,7 @@ def print_records_db():
     Displays the database records using pandas dataframe.
     '''
     try:
-        # Connect with the DB, create dataframe and display all its contents.
-        db = sqlite3.connect('scores.db')
+        db = sqlite3.connect('db/scores.db')
         df = pd.read_sql_query("SELECT * FROM scores", db)
         print(df.to_string())
     except sqlite3.Error as e:
@@ -128,5 +118,8 @@ def print_records_db():
 # Initialize the database (executed only once, or when to recreate the DB).
 #initDB()
 
-# Display all the database records.
-print_records_db()
+# Display all the database records (for testing purposes).
+# To run file scores.py for purposes of printing DB records, change line 112:
+# from: db = sqlite3.connect('db/scores.db')
+# to: db = sqlite3.connect('scores.db')
+#print_records_db()

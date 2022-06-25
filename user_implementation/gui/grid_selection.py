@@ -5,7 +5,7 @@ Date created:
     11/2021
 
 Date edited:
-    05/2022
+    06/2022
 
 Author:
     Filip J. Cierkosz
@@ -13,7 +13,7 @@ Author:
 
 import pygame
 from pygame.locals import *
-from graphics import *
+from gui.graphics import *
 
 class GridSelectionWindow:
     '''
@@ -66,30 +66,23 @@ class GridSelectionWindow:
         while (True):
             for event in pygame.event.get():
                 if (event.type==KEYDOWN):
-                    # Allow only digits as input.
                     if (event.unicode.isdigit()):
                         self.response = event.unicode
-                    # If required, clear user's input
                     elif (event.key==K_BACKSPACE):
                         self.response = self.response[:-1]
-                    # If user clicks enter and numerical value is correct, the game starts.
                     elif (event.key==K_RETURN and self.response in '3456' and self.response!=''):
                         self.play_game = True
                         return 
                 elif (event.type==QUIT):
                     return
 
-            # Set background color.
             self.window.fill(GRID_COLOR)
-
-            # Display all the instructions.
             text_area = self.font.render('WELCOME TO THE 2048 GAME!', True, WINDOW_FONT_COLOR)
             self.window.blit(text_area, text_area.get_rect(center=(250,30)))
             text_area = self.font.render('INPUT GRID SIZE (3/4/5/6)', True, WINDOW_FONT_COLOR)
             self.window.blit(text_area, text_area.get_rect(center=(250,75)))
             text_area = self.font.render('AND CLICK ENTER:', True, WINDOW_FONT_COLOR)
             self.window.blit(text_area, text_area.get_rect(center=(250,120)))
-
             text_area = self.font.render(self.response, True, USER_FONT_COLOR)
             self.window.blit(text_area, text_area.get_rect(center=(250,165)))
             pygame.display.flip()

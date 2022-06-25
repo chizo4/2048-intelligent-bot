@@ -5,7 +5,7 @@ Date created:
     11/2021
 
 Date edited:
-    05/2022
+    06/2022
 
 Author:
     Filip J. Cierkosz
@@ -16,8 +16,8 @@ import numpy as np
 import pygame
 from pygame.locals import *
 from time import sleep, time
-from graphics import *
-from scores import get_grid_best_score
+from gui.graphics import *
+from db.scores import get_grid_best_score
 
 class Game2048:
     '''
@@ -35,15 +35,15 @@ class Game2048:
         '''
         # Set the grid size according to the user response.
         self.GRID_SIZE = gs
-        self.score = 0
-        self.timer = 0
-        self.curr_best_score = get_grid_best_score(gs)
-        self.grid = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
         self.HEIGHT = 540
         self.WIDTH = 500
         self.TOP_SPACE = self.HEIGHT-self.WIDTH
         self.SPACE = 5
         self.SQUARE_SIZE = (self.WIDTH-(self.GRID_SIZE+1)*self.SPACE)/self.GRID_SIZE
+        self.score = 0
+        self.timer = 0
+        self.curr_best_score = get_grid_best_score(gs)
+        self.grid = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
         pygame.init()
         pygame.display.set_caption("2048: GAME")
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
@@ -106,7 +106,6 @@ class Game2048:
             Returns:
                 new (np.array) : Updated column/row to the grid.
         '''
-        # Append all the non-zero elements of the curr array.
         temp = [n for n in curr if (n!=0)]
         new = []
         skip = False
@@ -120,7 +119,6 @@ class Game2048:
             if (i!=len(temp)-1 and temp[i]==temp[i+1]):
                 skip = True
                 new.append(2*temp[i])
-            # Otherwise, append a single number.
             else:
                 new.append(temp[i])
 
@@ -161,16 +159,12 @@ class Game2048:
             Parameters:
                 self
         '''
-        # Set the background color.
         self.window.fill((GRID_COLOR))
 
-        # Iterate in order to display squares in the grid.
         for r in range(self.GRID_SIZE):
             for c in range(self.GRID_SIZE):
                 x = (c+1)*self.SPACE+c*self.SQUARE_SIZE
                 y = self.TOP_SPACE+(r+1)*self.SPACE+r*self.SQUARE_SIZE
-
-                # Get the number from the cell to define its corresponding color.
                 num = self.grid[r][c]
                 
                 # If a number on the grid is greater or equal to 2048, it will not
@@ -180,7 +174,6 @@ class Game2048:
                 else:
                     color = CELL_COLORS[num]
 
-                # Draw the square in the grid.
                 pygame.draw.rect(self.window, color,
                                 pygame.Rect(x,y,self.SQUARE_SIZE,self.SQUARE_SIZE),
                                 border_radius=8)
@@ -207,7 +200,7 @@ class Game2048:
             if (self.grid[row][col]==0):
                 available_coords.append((row, col))
 
-        # Append the new value in the grid.
+        # Append the new value in the grid according to probabilities.
         for c in random.sample(available_coords, k=n):
             if (random.random()<0.05):
                 self.grid[c] = 4
@@ -241,18 +234,12 @@ class Game2048:
             elif (move=='down'):
                 curr = self.grid[:, i][::-1]
 
-            # Update the row/column. Add any elements (if possible).
             new = self.update_arr(curr)
 
-            # Update the grid for the move to the left or up.
             if (move=='left'):
                 self.grid[i] = new
             elif (move=='up'):
                 self.grid[:, i] = new
-
-            # Update in the grid for the move to the right or down.
-            # The updated array has to be reversed again, so that non-zero
-            # elements are at the end of the new array.
             elif (move=='right'):
                 self.grid[i] = new[::-1]
             elif (move=='down'):
@@ -284,11 +271,9 @@ class Game2048:
 
         for mv in moves:
             self.make_move(mv)
-
-            # Check if the grids are equal after invoking a move.
             equal = (self.grid==original).all()
 
-            # If the grids are not equal, it means it is possible to continue.
+            # If grids not equal, then possible to continue.
             if (not equal):
                 self.grid = original
                 return False
@@ -325,12 +310,12 @@ class Game2048:
 
     def play(self):
         '''
-        Main method to play the game.
+        Main method to play the game, initialized with 2 
+        values in the grid.
 
             Parameters:
                 self
         '''
-        # Initialize the board with 2 starting numbers in the grid.
         self.insert_new_num(n=2)
         start = self.set_timer()
 
@@ -342,22 +327,18 @@ class Game2048:
             self.window.blit(text_area, text_area.get_rect(center=(115,20)))
             pygame.display.flip()
 
-            # Get the user keyboard response.
-            kbd_response = self.listen_for_key_press()
+            kbd_user_response = self.listen_for_key_press()
 
             # The game stops if the user triggers 'q' or escape the game.
-            if (kbd_response=='stop'):
+            if (kbd_user_response=='stop'):
                 break
 
             old_grid = self.grid.copy()
-            
-            # Execute the user command.
-            self.make_move(kbd_response)
+            self.make_move(kbd_user_response)
             
             if (self.check_if_over()):
                 self.window.fill((GRID_COLOR))
                 self.timer = self.stop_timer(start)
-
                 text_area = self.font_msg.render('GAME OVER!', True, WINDOW_FONT_COLOR)
                 self.window.blit(text_area, 
                                  text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-120)))
@@ -381,12 +362,10 @@ class Game2048:
                     self.window.blit(text_area, 
                                      text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
                 
-                # Update the final screen and display it for 5 seconds before exiting.
+                # Update the final screen and display it for 3 seconds before exiting.
                 pygame.display.flip()
-                sleep(5)
+                sleep(3)
                 break
 
-            equal = (self.grid==old_grid).all()
-
-            if (not equal):
+            if (not (self.grid==old_grid).all()):
                 self.insert_new_num()

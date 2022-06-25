@@ -5,15 +5,15 @@ Date created:
     02/2022
 
 Date edited:
-    03/2022
+    06/2022
 
 Author:
     Filip J. Cierkosz
 '''
 
-from game_board import Game2048
-from grid_selection import GridSelectionWindow
-from scores import update_db, count_db_rows
+from gui.game_board import Game2048
+from gui.grid_selection import GridSelectionWindow
+from db.scores import update_db, count_db_rows
 from datetime import datetime
 
 def main():
@@ -30,8 +30,6 @@ def main():
         game = Game2048(grid_size)
         game.play()
         now = datetime.now()
-
-        # Update the database with a new row with the latest data.
         update_db(id=count_db_rows(),
                   gs=game.get_grid_size(),
                   sc= int(game.get_score()),
