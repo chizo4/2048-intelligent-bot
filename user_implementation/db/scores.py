@@ -60,7 +60,7 @@ def update_db(id, gs, sc, tsec, dt):
         except sqlite3.Error as e:
             print(f'Failed to update the DB. An error occurred:\n', e)
     else:
-        print('No updates to the DB.')
+        print('\nNo updates to the DB.\n')
 
 def count_db_rows():
     '''

@@ -58,42 +58,6 @@ class Game2048:
                                            FONT_SIZES['finalMsg'],
                                            FONT_BOARD[1])
 
-    def get_score(self):
-        '''
-        Accessor for the score.
-
-            Parameters:
-                self
-
-            Returns:
-                self.score (int) : Score obtained during the game.
-        '''
-        return self.score
-
-    def get_time(self):
-        '''
-        Accessor for the time that elapsed while playing the game.
-
-            Parameters:
-                self
-
-            Returns:
-                self.timer (float) : Time in seconds elapsed while playing the game (2 d.p.).
-        '''
-        return self.timer
-
-    def get_grid_size(self):
-        '''
-        Accessor for the current grid size.
-
-            Parameters:
-                self
-
-            Returns:
-                self.GRID_SIZE : Current grid size on the board.
-        '''
-        return self.GRID_SIZE
-
     @staticmethod
     def update_arr(curr):
         '''
@@ -271,42 +235,28 @@ class Game2048:
 
         for mv in moves:
             self.make_move(mv)
-            equal = (self.grid==original).all()
 
             # If grids not equal, then possible to continue.
-            if (not equal):
+            if (not (self.grid==original).all()):
                 self.grid = original
                 return False
 
         return True
 
-    def set_timer(self):
-        '''
-        Sets the timer.
+    # Returns the score of the game.
+    get_score = lambda self: self.score
 
-            Parameters:
-                self
+    # Returns the time elapsed while playing the game.
+    get_time = lambda self: self.timer
 
-            Returns:
-                start (time) : Started timer.
-        '''
-        start = time()
-        return start
+    # Returns the current size of the grid.
+    get_grid_size = lambda self: self.GRID_SIZE
+    
+    # Sets the timer.
+    set_timer = lambda self: time()
 
-    def stop_timer(self, start):
-        '''
-        Stops the timer and returns the time of execution.
-
-            Parameters:
-                self
-                start (time) : Started timer.
-
-            Returns:
-                executionTime (time) : Time of execution.
-        '''
-        stop = time()
-        execution_time = stop-start
-        return execution_time
+    # Stops the timer and returns the time of execution.
+    stop_timer = lambda self, start: time()-start
 
     def play(self):
         '''
