@@ -22,8 +22,7 @@ GRID_FONT_COLOR = '#12023d'
 WINDOW_FONT_COLOR = '#fafafa'
 USER_FONT_COLOR = '#a2ff29'
 
-# Dictionary of colors of cells corresponding with their 
-# numerical values on the board. 
+# Cell colors corresponding with their numerical values on the board. 
 CELL_COLORS = {
     0:'#fafafa',
     1:'#c4beb5',
@@ -40,9 +39,10 @@ CELL_COLORS = {
     2048:'#ffb300',
 }
 
-# Dictionary of font sizes.
+# Font sizes for different applications.
 FONT_SIZES = {
-    '5':35,
+    #'5':35,
+    '4':35,
     'finalMsg':30,
     'score':25,
 }

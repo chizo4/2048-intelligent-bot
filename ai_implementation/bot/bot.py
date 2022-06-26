@@ -32,10 +32,11 @@ class GameBot:
                 self
         '''
         self.moves = ['right', 'left', 'up', 'down']
-        self.GRID_SIZE = 5 
-        self.grid = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
         self.score = 0
         self.timer = 0
+        self.win = False
+        self.GRID_SIZE = 4
+        self.grid = np.zeros((self.GRID_SIZE, self.GRID_SIZE), dtype=int)
         self.HEIGHT = 540
         self.WIDTH = 500
         self.TOP_SPACE = self.HEIGHT-self.WIDTH
@@ -149,6 +150,8 @@ class GameBot:
                 available_coords.append((row, col))
 
         # Append the new value in the grid in random available position.
+        # issue: the bot runs out of available spots, bot logic problem
+        #print(available_coords) temporarily
         for c in random.sample(available_coords, k=n):
             self.grid[c] = 2
 
@@ -203,16 +206,15 @@ class GameBot:
 
         for mv in self.moves:
             self.make_move(mv)
-            equal = (self.grid==original).all()
 
-            if (not equal):
+            if (not (self.grid==original).all()):
                 self.grid = original
                 return False
 
         return True
 
     # STILL IN DEVELOPMENT STAGE!!!
-    def search_move(self):
+    #def search_move(self):
         '''
         AI bot searches the best move performing each of the available moves, then
         simulating future states of the game board. Finally, the best move is selected
@@ -226,17 +228,15 @@ class GameBot:
                 bestMv (st) : Selected best move for the current state of the
                               grid; either 'right', 'left', 'up', or 'down'.
         '''
-        # Make a copy of the initial state of the grid.
+        '''# Make a copy of the initial state of the grid.
         orig_grid = self.grid.copy()
-
         # Dictionary to calculate costs per each move, based on scores and empty spots.
         costs = {mv:0 for mv in self.moves}
-
         # Determine the number of searches per one move and the depth of the search.
-        searches_mv = 100
+        #searches_mv = 100
+        #depth = 10
+        searches_mv = 20
         depth = 10
-        #searchesMv = 64
-        #depth = 16
 
         # Test each available move.
         for mv in self.moves:
@@ -250,7 +250,8 @@ class GameBot:
             if (not game_over_mv and not (self.grid==orig_grid).all()):
                 self.insert_new_num()
                 costs[mv] += score_mv
-                counter_mv = 1
+                search_board = self.grid.copy()
+                #counter_mv = 1 uncomment if necessary
             # Otherwise, restart the grid to the initial state and move to the next move.
             else:
                 self.grid = orig_grid.copy()
@@ -258,48 +259,130 @@ class GameBot:
 
             # Perform simulation of later moves.
             for i in range(searches_mv):
-                search_board = self.grid.copy()
+                counter_mv = 1 # added now
+                self.grid = search_board.copy()
                 game_over = False
 
                 while (not game_over and counter_mv<depth):
-                    search_board = self.grid.copy()
+                    #search_board = self.grid.copy()
                     # Execute a random move.
-                    self.make_move(self.shuffle_move())
+
+                    # shuffle new random move
+                    random_mv = self.shuffle_move()
+                    # copy the state of the current search board
+                    curr_search_board = self.grid.copy()
+                    #invoke the new randomly selected move
+                    self.make_move(random_mv)
+
+                    #self.make_move(self.shuffle_move())
+
                     game_over = self.check_if_over()
                     simulated_score = np.max(self.grid)
 
-                    if (not game_over and not (self.grid==search_board).all()):
+                    if (game_over):
+                        break
+
+                    #if (not game_over and not (self.grid==curr_search_board).all()):
+                    if (not (self.grid==curr_search_board).all()):
                         self.insert_new_num()
                         costs[mv] += simulated_score
                         counter_mv += 1
 
                 # Increment the costs by the number of empty spots in the current state of grid.
-                costs[mv] += 100*np.count_nonzero(self.grid==0)
+                #costs[mv] += 100*np.count_nonzero(self.grid==0)
             
             # Restart the grid to the initial state for the next move to be tested.
-            self.grid = orig_grid.copy()
+            #self.grid = orig_grid.copy()
+            self.grid = search_board.copy()
 
         # Finally, restart the grid to the initial state one last time.
         self.grid = orig_grid.copy()
 
         # Find and return the best searched move.
         best_mv = max(costs, key=costs.get)
-        return best_mv
+        return best_mv'''
 
+    def search_move(self):
+        '''
+        new implementation of the ai search.
+        '''
+        original_grid = self.grid.copy()
+        searches_for_mv = 20
+        search_depth = 10
+        #scores = np.zeros(4)
+        # change to dict comprehension (but later)
+        scores = {'left':0, 'right':0, 'up':0, 'down':0}
+
+        # itearate through 4 possible moves
+        for init_mv in self.moves:
+            self.make_move(init_mv)
+            game_over_init_mv = self.check_if_over()
+            score_init_mv = np.max(self.grid)
+            # copy the state of the grid after invoking one of the first valid moves
+            search_board_init_mv = self.grid.copy()
+
+            if (not game_over_init_mv and not (self.grid==original_grid).all()):
+                #add new tile
+                # update the scores
+                self.insert_new_num()
+                scores[init_mv] += score_init_mv
+                search_board_init__insertion_mv = self.grid.copy()
+                #search_board_after_first_mv = self.grid.copy()
+            else:
+                continue
+
+            for _ in range(searches_for_mv):
+                #print(f'looping {m} time for {init_mv}')
+                count_mv = 1
+                self.grid = search_board_init__insertion_mv.copy()
+                game_over = False
+
+                while (not game_over and count_mv<search_depth):
+                    rand_mv = self.shuffle_move()
+                    search_board_before_new_mv = self.grid.copy()
+                    self.make_move(rand_mv)
+                    new_score = self.get_score()
+                    game_over = self.check_if_over()
+
+                    if (not game_over and not (self.grid==search_board_before_new_mv).all()):
+                        self.insert_new_num()
+                        scores[init_mv] += new_score
+                        count_mv += 1
+                    #else:
+                        #break
+
+
+            self.grid = original_grid.copy()
+
+        #best_move_index = np.argmax(scores)
+        #best_move = self.moves[best_move_index]
+        best = max(scores, key=scores.get)
+        print(scores)
+        print(best)
+        self.grid = original_grid.copy() # reset the grid to the initial state
+
+        if (scores['down']==0 and scores['up']==0 and scores['left']==0 and scores['right']==0):
+            return self.shuffle_move()
+
+        return best
+                    
+    # Shuffles a random move (either 'right', 'left', 'up', or 'down').
     shuffle_move = lambda self: np.random.choice(self.moves, 1)
-        
-    '''def shuffle_move(self):
-        
-        Shuffles a random move.
 
-            Parameters:
-                self
+    # Sets the timer.
+    set_timer = lambda self: time()
 
-            Returns:
-                randMv : One randomly selected move; either 'right', 'left',
-                         'up', or 'down'.
-        
-        return '''
+    # Stops the timer and returns the time of execution.
+    stop_timer = lambda self, start: time()-start
+
+    # Returns boolean denoting if bot won the game.
+    bot_win = lambda self: self.win
+
+    # Returns the score of the game.
+    get_score = lambda self: self.score
+
+    # Returns the time elapsed while playing the game.
+    get_time = lambda self: self.timer
 
     def play(self):
         '''
@@ -325,7 +408,8 @@ class GameBot:
             pygame.display.flip()
 
             # If the AI bot reaches the goal state, i.e. score: 2048, it denotes win.
-            if (self.score==16384):
+            if (self.score==2048):
+                self.win = True
                 self.window.fill((GRID_COLOR))
                 self.timer = self.stop_timer(start)
                 text_area = self.font_msg.render(f'BOT WON THE GAME!', 
@@ -342,8 +426,11 @@ class GameBot:
 
             old_grid = self.grid.copy()
             next_move = self.search_move()
+            print(f'found new move : {next_move}')
             self.make_move(next_move)
+            print(f'executed the new move : {next_move}')
             
+            # Screen for bot's loss.
             if (self.check_if_over()):
                 self.window.fill((GRID_COLOR))
                 self.timer = self.stop_timer(start)
@@ -357,15 +444,9 @@ class GameBot:
                                  text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
                 pygame.display.flip()
 
-                # Delay 1 second to display the final screen.
+                # Delay 1 sec to display the final screen, then terminate the game.
                 sleep(1)
                 return False
 
             if (not (self.grid==old_grid).all()):
                 self.insert_new_num()
-
-    # Sets the timer.
-    set_timer = lambda self: time()
-
-    # Stops the timer and returns the time of execution.
-    stop_timer = lambda self, start: time()-start
