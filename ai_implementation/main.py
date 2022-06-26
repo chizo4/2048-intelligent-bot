@@ -16,11 +16,11 @@ from db.scores import init_db
 def main():
     bot = GameBot()
     # uncomment to play
-    #bot.play() 
+    bot.play() 
     print(bot.score)
 
     # testing
-    init_db()
+    #init_db()
 
 
 if (__name__=='__main__'):
