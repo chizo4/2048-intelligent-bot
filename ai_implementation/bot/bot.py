@@ -307,8 +307,8 @@ class GameBot:
         new implementation of the ai search.
         '''
         original_grid = self.grid.copy()
-        searches_for_mv = 20
-        search_depth = 10
+        searches_for_mv = 24
+        search_depth = 12
         #scores = np.zeros(4)
         # change to dict comprehension (but later)
         scores = {'left':0, 'right':0, 'up':0, 'down':0}
@@ -350,6 +350,8 @@ class GameBot:
                         count_mv += 1
                     #else:
                         #break
+
+                scores[init_mv] += 64*np.count_nonzero(self.grid==0)
 
 
             self.grid = original_grid.copy()
