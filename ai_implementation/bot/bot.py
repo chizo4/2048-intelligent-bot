@@ -1,10 +1,7 @@
 '''
-2048 GAME PROJECT: AI Bot. 
+bot.py
 
-ABOUT: The bot is implemented using a Monte Carlo 
-       tree search with cost calculation, which is
-       calculated considering scores and empty spaces
-       of simulations of the current state of the grid.
+2048 GAME PROJECT: AI Bot implementation (more info in README.md).
 
 Date created:
     03/2022
@@ -29,7 +26,7 @@ class GameBot:
     Class to create a game board for 2048 to be solved by an AI bot. 
     -----------
     '''
-    def __init__(self, cc):
+    def __init__(self):
         '''
         Constructor to initialize an appropriately-sized grid for the game with all attributes.
 
@@ -166,10 +163,10 @@ class GameBot:
         If you wish to move to the left/right, look at the rows of the grid.
         If you wish to move up/down, look at the columns.
 
-                Parameters:
-                    self
-                    move (str) : String describing the user's move; either 'right',
-                                 'left', 'up', or 'down'.
+            Parameters:
+                self
+                move (str) : String describing the user's move; either 'right',
+                                'left', 'up', or 'down'.
         '''
         for i in range(self.GRID_SIZE):
             if (move=='left'):
@@ -215,62 +212,63 @@ class GameBot:
 
     def search_move(self):
         '''
-        AI bot searches the best move performing each of the available moves, then
-        simulating future states of the game board. Finally, the best move is selected
-        analyzing the costs (the higher the cost, the better the choice). The costs
-        consist of such aspects as scores on the grid and empty spots.
+        AI bot searchs the most optimal path by simulating future states of the
+        current grid for each of the four moves. The best move is selected
+        analyzing the final costs, which are calculated considering consecutive
+        max scores on board and empty spots multiplied by the constant.
 
             Parameters:
                 self
 
             Returns:
-                bestMv (st) : Selected best move for the current state of the
-                              grid; either 'right', 'left', 'up', or 'down'.
+                best_mv (str) : best searched move ('right'/'left'/'up'/'down').
         '''
         original_grid = self.grid.copy()
-        costs = {'left':0, 'right':0, 'up':0, 'down':0}
+        costs =  {mv:0 for mv in self.moves}
 
-        for init_mv in self.moves:
-            self.make_move(init_mv)
-            game_over_init_mv = self.check_if_over()
-            score_init_mv = np.max(self.grid)
+        for first_mv in self.moves:
+            self.make_move(first_mv)
+            game_over_first_mv = self.check_if_over()
+            score_first_mv = np.max(self.grid)
 
-            if (not game_over_init_mv and not (self.grid==original_grid).all()):
+            if (not game_over_first_mv and not (self.grid==original_grid).all()):
                 self.insert_new_num()
-                costs[init_mv] += score_init_mv
-                search_board_init_insertion_mv = self.grid.copy()
+                costs[first_mv] += score_first_mv
+                search_board_after_first_insert = self.grid.copy()
             else:
                 continue
 
             for _ in range(self.SEARCHES_PER_MV):
                 counter = 1
-                self.grid = search_board_init_insertion_mv.copy()
+                self.grid = search_board_after_first_insert.copy()
                 game_over = False
 
                 while (counter<self.SEARCH_DEPTH and not game_over):
                     random_mv = self.shuffle_move()
-                    simulated_grid = self.grid.copy()
+                    prev_simulated_grid = self.grid.copy()
                     self.make_move(random_mv)
-                    new_score = self.get_score()
+                    new_simulated_score = self.get_score()
                     game_over = self.check_if_over()
 
-                    if (not game_over and not (self.grid==simulated_grid).all()):
+                    if (not game_over and not (self.grid==prev_simulated_grid).all()):
                         self.insert_new_num()
-                        costs[init_mv] += new_score
-                        counter += 1
-                    
-                costs[init_mv] += self.COST_CONST*np.count_nonzero(self.grid==0)
-
+                        costs[first_mv] += new_simulated_score
+                        counter += 1  
+                costs[first_mv] += self.EMPTY_SPOT_CONSTANT*np.count_nonzero(self.grid==0)
             self.grid = original_grid.copy()
 
-        best = max(scores, key=scores.get)
-        self.grid = original_grid.copy() # reset the grid to the initial state
-        if (scores['down']==0 and scores['up']==0 and scores['left']==0 and scores['right']==0):
-            return self.shuffle_move()
+        # Find the best move (one with the highest costs).
+        best_mv = max(costs, key=costs.get)
 
-        return best
+        # Reset the grid to its original state.
+        self.grid = original_grid.copy()
+
+        if (all(val==0 for val in costs.values())):
+            return self.shuffle_move()
+        else:
+            return best_mv
                     
-    # Shuffles a random move (either 'right', 'left', 'up', or 'down').
+    # Shuffles a random move (either: 'right', 'left', 'up', or 'down').
     shuffle_move = lambda self: np.random.choice(self.moves, 1)
 
     # Sets the timer.
@@ -290,13 +288,10 @@ class GameBot:
 
     def play(self):
         '''
-        Main method to play the game.
+        Main method to make the bot play the game.
 
             Parameters:
                 self
-
-            Returns:
-             True/False (boolean) : True if game is won, False otherwise.
         '''
         # Initialize the board, with 2 starting numbers in the grid.
         self.insert_new_num(n=2)
@@ -326,6 +321,7 @@ class GameBot:
                 pygame.display.flip()
                 self.win = 1
                 sleep(0.5)
+                return True
 
             old_grid = self.grid.copy()
             next_move = self.search_move()

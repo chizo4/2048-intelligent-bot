@@ -1,4 +1,6 @@
 '''
+graphics.py
+
 2048 GAME PROJECT: Graphics adjustments.
 
 Date created: 
