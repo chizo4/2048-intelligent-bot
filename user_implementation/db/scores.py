@@ -1,4 +1,6 @@
 '''
+scores.py
+
 2048 GAME PROJECT: Data handling with database and pandas dataframe.
 
 Date created:

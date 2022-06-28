@@ -1,4 +1,6 @@
 '''
+graphics_bot.py
+
 2048 GAME PROJECT: Graphics adjustments for AI bot.
 
 Date created: 
@@ -39,9 +41,5 @@ CELL_COLORS = {
     2048:'#ffb300',
 }
 
-# Font sizes for different applications.
-FONT_SIZES = {
-    '4':35,
-    'finalMsg':30,
-    'score':25,
-}
+# Font sizes for different usages.
+FONT_SIZES = {'4':35, 'finalMsg':30, 'score':25,}
