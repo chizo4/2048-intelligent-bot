@@ -6,6 +6,9 @@ main.py
 Date created:
     04/2022
 
+Date edited:
+    06/2022
+
 Author:
     Filip J. Cierkosz
 '''
@@ -21,6 +24,11 @@ def main():
     '''
     bot = GameBot()
     bot.play()
+    now = datetime.now()
+    update_db(win=bot.is_win(),
+              score=int(bot.get_score()),
+              t_sec=bot.get_time(),
+              date=now.strftime('%d %b %Y %I:%M:%S %p'))
 
 def run_tests():
     '''
@@ -30,18 +38,14 @@ def run_tests():
     NB: Takes several hours to complete!
     '''
     for _ in range(500):
-        bot = GameBot()
-        bot.play()
-        now = datetime.now()
-        update_db(win=bot.is_win(),
-                score=int(bot.get_score()),
-                t_sec=bot.get_time(),
-                date=now.strftime('%d %b %Y %I:%M:%S %p'))
+        main()
 
 if (__name__=='__main__'):
     # Run only to initialize or reset the database.
-    #init_db()
-    # Uncomment to run one sample.
-    #main()
-    # Uncomment to run 200 samples.
-    run_tests()
+    # init_db()
+
+    # Run one sample of the AI bot.
+    main()
+
+    # Uncomment to run 500 samples.
+    # run_tests()
