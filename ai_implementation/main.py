@@ -24,17 +24,17 @@ def main():
 
 def run_tests():
     '''
-    Performs 200 sample runs of the AI bot and stores 
+    Performs 500 sample runs of the AI bot and stores 
     the results in the initialized database. 
 
     NB: Takes several hours to complete!
     '''
-    for _ in range(200):
+    for _ in range(500):
         bot = GameBot()
         bot.play()
         now = datetime.now()
         update_db(win=bot.is_win(),
-                score=bot.get_score(),
+                score=int(bot.get_score()),
                 t_sec=bot.get_time(),
                 date=now.strftime('%d %b %Y %I:%M:%S %p'))
 
