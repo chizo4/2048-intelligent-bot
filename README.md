@@ -2,7 +2,7 @@
 
 ## The repository contains my own implementation of [2048](https://en.wikipedia.org/wiki/2048_(video_game)), which used to be recognized as a very popular mobile game back in the day. The game was developed in Python using number of popular libraries, e.g. [pygame](https://www.pygame.org/news), [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/), etc. The repo contains two slightly different versions of the game. Please follow the descriptions below to find out more about the code!
 
-## ```ai-implementation``` ~ aimed to be solved by an intelligent bot
+## ```ai_implementation``` ~ aimed to be solved by an intelligent bot
 
 Rules:
 - The game automatically initializes with a specified 4x4 grid size.
@@ -15,7 +15,7 @@ Rules:
 
 #
 
-## ```user-implementation``` ~ aimed to be played by a human user
+## ```user_implementation``` ~ aimed to be played by a human user
 
 Rules:
 - The user might select a grid 3x3, 4x4, 5x5, or 6x6. 
