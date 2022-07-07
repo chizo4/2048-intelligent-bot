@@ -13,6 +13,8 @@ Rules:
 
 <b>To read more information about the AI implementation and running the bot - [FOLLOW THE LINK](https://github.com/chizo4/2048-Project/tree/main/ai_implementation).</b>
 
+#
+
 ## ```user-implementation``` ~ aimed to be played by a human user
 
 Rules:
@@ -36,3 +38,5 @@ Rules:
 <p align="center">
   <img src="./images/image_gui.png" width="400" alt="The Image of 2048 Game Board."/>
 </p>
+
+#
