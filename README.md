@@ -2,8 +2,6 @@
 
 ## The repository contains my own implementation of [2048](https://en.wikipedia.org/wiki/2048_(video_game)), which used to be recognized as a very popular mobile game back in the day. The game was developed in Python using number of popular libraries, e.g. [pygame](https://www.pygame.org/news), [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/), etc. The repo contains two slightly different versions of the game. Please follow the descriptions below to find out more about the code!
 
-#
-
 ## ```ai-implementation``` ~ aimed to be solved by an intelligent bot
 
 Rules:
@@ -14,8 +12,6 @@ Rules:
 - The game is terminated when the bot reaches the score of 2048, which denotes a goal state (or when it loses the game).
 
 <b>To read more information about the AI implementation and running the bot - [FOLLOW THE LINK](https://github.com/chizo4/2048-Project/tree/main/ai_implementation).</b>
-
-#
 
 ## ```user-implementation``` ~ aimed to be played by a human user
 
