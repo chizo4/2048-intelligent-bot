@@ -1,13 +1,13 @@
 '''
 main.py
 
-2048 GAME PROJECT: Main program.
+2048 GAME PROJECT: Main program for running AI.
 
 Date created:
     04/2022
 
 Date edited:
-    06/2022
+    07/2022
 
 Author:
     Filip J. Cierkosz
@@ -17,10 +17,10 @@ from bot.bot import GameBot
 from db.bot_records_setup import init_db, update_db
 from datetime import datetime
 
-def main():
+def run_bot():
     '''
-    Main method to perform one sample run of the AI bot 
-    and store the result in the databse.
+    Main method to perform one sample run of the AI bot
+    and storing the results in DB.
     '''
     bot = GameBot()
     bot.play()
@@ -38,14 +38,15 @@ def run_tests():
     NB: Takes several hours to complete!
     '''
     for _ in range(500):
-        main()
+        run_bot()
+        
 
 if (__name__=='__main__'):
     # Run only to initialize or reset the database.
     # init_db()
 
     # Run one sample of the AI bot.
-    main()
+    run_bot()
 
     # Uncomment to run 500 samples.
     # run_tests()
