@@ -7,7 +7,7 @@ Date created:
     02/2022
 
 Date edited:
-    06/2022
+    07/2022
 
 Author:
     Filip J. Cierkosz
@@ -20,14 +20,15 @@ from datetime import datetime
 
 def main():
     '''
-    Main method to execute the game and all related methods.
+    Main method to run the game instance.
     '''
-    # Initialize the grid selection windows. Collect user's responses.
+    # Initialize the grid selection windows; collect user's responses.
     selection = GridSelectionWindow()
     selection.prompt_user()
     grid_size = int(selection.get_response())
     init_game = selection.play_game
     
+    # Initialze the game.
     if (init_game):
         game = Game2048(grid_size)
         game.play()
@@ -38,6 +39,9 @@ def main():
                   tsec=game.get_time(),
                   dt=now.strftime('%d %b %Y %I:%M:%S %p'))
 
-# Run the main program.
 if (__name__=='__main__'):
+    # Run only if needed to initialize or reset the database.
+    # init_db()
+    
+    # Play the game...
     main()
