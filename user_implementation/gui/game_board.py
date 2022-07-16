@@ -7,7 +7,7 @@ Date created:
     11/2021
 
 Date edited:
-    06/2022
+    07/2022
 
 Author:
     Filip J. Cierkosz
@@ -50,15 +50,21 @@ class Game2048:
         pygame.display.set_caption("2048: GAME")
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         pygame.font.init()
-        self.font_game = pygame.font.SysFont(FONT_BOARD[0], 
-                                            FONT_SIZES[f'{self.GRID_SIZE}'], 
-                                            FONT_BOARD[1])
-        self.font_score = pygame.font.SysFont(FONT_BOARD[0],
-                                             FONT_SIZES['score'], 
-                                             FONT_BOARD[1])
-        self.font_msg = pygame.font.SysFont(FONT_BOARD[0],
-                                           FONT_SIZES['finalMsg'],
-                                           FONT_BOARD[1])
+        self.font_game = pygame.font.SysFont(
+            FONT_BOARD[0],
+            FONT_SIZES[f'{self.GRID_SIZE}'],
+            FONT_BOARD[1]
+        )
+        self.font_score = pygame.font.SysFont(
+            FONT_BOARD[0],
+            FONT_SIZES['score'],
+            FONT_BOARD[1]
+        )
+        self.font_msg = pygame.font.SysFont(
+            FONT_BOARD[0],
+            FONT_SIZES['finalMsg'],
+            FONT_BOARD[1]
+        )
 
     @staticmethod
     def update_arr(curr):
@@ -140,15 +146,20 @@ class Game2048:
                 else:
                     color = CELL_COLORS[num]
 
-                pygame.draw.rect(self.window, color,
-                                pygame.Rect(x,y,self.SQUARE_SIZE,self.SQUARE_SIZE),
-                                border_radius=8)
+                pygame.draw.rect(
+                    self.window,
+                    color,
+                    pygame.Rect(x,y,self.SQUARE_SIZE,self.SQUARE_SIZE),
+                    border_radius=8
+                )
 
                 # Display numbers for each square. Do NOT draw zeros.
                 if (num!=0):
                     text_area = self.font_game.render(f'{num}', True, GRID_FONT_COLOR)
-                    self.window.blit(text_area, 
-                                     text_area.get_rect(center=(x+self.SQUARE_SIZE/2, y+self.SQUARE_SIZE/2)))
+                    self.window.blit(
+                        text_area,
+                        text_area.get_rect(center=(x+self.SQUARE_SIZE/2, y+self.SQUARE_SIZE/2))
+                    )
 
     def insert_new_num(self, n=1):
         '''
@@ -275,8 +286,15 @@ class Game2048:
         while (True):
             self.draw()
             self.update_score()
-            text_area = self.font_score.render(f'SCORE: {self.score:06d}', True, WINDOW_FONT_COLOR)
-            self.window.blit(text_area, text_area.get_rect(center=(115,20)))
+            text_area = self.font_score.render(
+                f'SCORE: {self.score:06d}',
+                True,
+                WINDOW_FONT_COLOR
+            )
+            self.window.blit(
+                text_area,
+                text_area.get_rect(center=(115,20))
+            )
             pygame.display.flip()
 
             kbd_user_response = self.listen_for_key_press()
@@ -291,28 +309,55 @@ class Game2048:
             if (self.check_if_over()):
                 self.window.fill((GRID_COLOR))
                 self.timer = self.stop_timer(start)
-                text_area = self.font_msg.render('GAME OVER!', True, WINDOW_FONT_COLOR)
-                self.window.blit(text_area, 
-                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-120)))
-                text_area = self.font_msg.render(f'TIME PLAYED: {self.timer:.1f} SEC', 
-                                                 True, WINDOW_FONT_COLOR)
-                self.window.blit(text_area, 
-                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50)))
-                text_area = self.font_msg.render(f'YOUR SCORE: {self.score}', True, WINDOW_FONT_COLOR)
-                self.window.blit(text_area, 
-                                 text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20)))
+                text_area = self.font_msg.render(
+                    'GAME OVER!',
+                    True,
+                    WINDOW_FONT_COLOR
+                )
+                self.window.blit(
+                    text_area,
+                    text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-120))
+                )
+                text_area = self.font_msg.render(
+                    f'TIME PLAYED: {self.timer:.1f} SEC',
+                    True, 
+                    WINDOW_FONT_COLOR
+                )
+                self.window.blit(
+                    text_area,
+                    text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2-50))
+                )
+                text_area = self.font_msg.render(
+                    f'YOUR SCORE: {self.score}',
+                    True,
+                    WINDOW_FONT_COLOR
+                )
+                self.window.blit(
+                    text_area,
+                    text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+20))
+                )
 
                 # Notice to the user if the best score was beaten.
                 if (self.score>int(self.curr_best_score)):
-                    text_area = self.font_msg.render(f'NEW BEST SCORE: {self.score}', 
-                                                     True, USER_FONT_COLOR)
-                    self.window.blit(text_area,
-                                     text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
+                    text_area = self.font_msg.render(
+                        f'NEW BEST SCORE: {self.score}',
+                        True, 
+                        USER_FONT_COLOR
+                    )
+                    self.window.blit(
+                        text_area,
+                        text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90))
+                    )
                 else:
-                    text_area = self.font_msg.render(f'BEST SCORE: {self.curr_best_score}', 
-                                                     True, WINDOW_FONT_COLOR)
-                    self.window.blit(text_area, 
-                                     text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90)))
+                    text_area = self.font_msg.render(
+                        f'BEST SCORE: {self.curr_best_score}',
+                        True, 
+                        WINDOW_FONT_COLOR
+                    )
+                    self.window.blit(
+                        text_area,
+                        text_area.get_rect(center=(self.WIDTH/2,self.HEIGHT/2+90))
+                    )
                 
                 # Update the final screen and display it for 3 seconds before exiting.
                 pygame.display.flip()

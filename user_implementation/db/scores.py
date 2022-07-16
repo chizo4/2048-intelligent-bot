@@ -7,7 +7,7 @@ Date created:
     03/2022
 
 Date edited:
-    06/2022
+    07/2022
 
 Author:
     Filip J. Cierkosz
@@ -23,15 +23,15 @@ def init_db():
     db = sqlite3.connect('db/scores.db')
     cursor = db.cursor()
     cursor.execute('DROP TABLE IF EXISTS scores')
-    cursor.execute('''
-                CREATE TABLE scores (
-                    id INTEGER PRIMARY KEY,
-                    grid_size INTEGER,
-                    score INTEGER,
-                    time_played_sec FLOAT,
-                    date_played TEXT
-                )
-            ''')
+    cursor.execute(
+        '''CREATE TABLE scores (
+            id INTEGER PRIMARY KEY,
+            grid_size INTEGER,
+            score INTEGER,
+            time_played_sec FLOAT,
+            date_played TEXT
+        )'''
+    )
     db.commit()
     db.close()
     print('The DB has been successfully initialized.')
@@ -53,12 +53,14 @@ def update_db(id, gs, sc, tsec, dt):
             cursor.execute(insert_with_params, data)
             db.commit()
             db.close()
-            print(f'''The DB has been successfully updated with new data:\n
+            print(
+                f'''The DB has been successfully updated with new data:\n
                     id : {id}
                     grid_size : {gs}
-                    score : {sc},
-                    time_played_sec : {tsec},
-                    date_played : {dt}\n''')
+                    score : {sc}
+                    time_played_sec : {tsec}
+                    date_played : {dt}\n'''
+            )
         except sqlite3.Error as e:
             print(f'Failed to update the DB. An error occurred:\n', e)
     else:

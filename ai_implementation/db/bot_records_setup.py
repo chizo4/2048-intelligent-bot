@@ -21,14 +21,14 @@ def init_db():
     db = sqlite3.connect('db/bot_records.db')
     cursor = db.cursor()
     cursor.execute('DROP TABLE IF EXISTS bot_records')
-    cursor.execute('''
-                CREATE TABLE bot_records (
-                    id INTEGER PRIMARY KEY,
-                    score INTEGER,
-                    win INTEGER,
-                    time_played_sec FLOAT,
-                    date_played TEXT)
-            ''')
+    cursor.execute(
+        '''CREATE TABLE bot_records (
+            id INTEGER PRIMARY KEY,
+            score INTEGER,
+            win INTEGER,
+            time_played_sec FLOAT,
+            date_played TEXT)'''
+    )
     db.commit()
     db.close()
     print('The DB has been successfully initialized.')
@@ -49,11 +49,13 @@ def update_db(win, score, t_sec, date):
             cursor.execute(insert_with_params, data)
             db.commit()
             db.close()
-            print(f'''The DB has been successfully updated with new data:\n
+            print(
+                f'''The DB has been successfully updated with new data:\n
                     score : {score}
                     win : {win}
                     time_played_sec : {t_sec},
-                    date_played : {date}\n''')
+                    date_played : {date}\n'''
+            )
         except sqlite3.Error as e:
             print(f'Failed to update the DB. An error occurred:\n', e)
     else:
