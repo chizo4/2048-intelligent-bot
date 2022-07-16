@@ -25,10 +25,12 @@ def run_bot():
     bot = GameBot()
     bot.play()
     now = datetime.now()
-    update_db(win=bot.is_win(),
-              score=int(bot.get_score()),
-              t_sec=bot.get_time(),
-              date=now.strftime('%d %b %Y %I:%M:%S %p'))
+    update_db(
+        win=bot.is_win(),
+        score=int(bot.get_score()),
+        t_sec=bot.get_time(),
+        date=now.strftime('%d %b %Y %I:%M:%S %p')
+    )
 
 def run_tests():
     '''

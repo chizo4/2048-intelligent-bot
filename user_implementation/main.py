@@ -33,11 +33,13 @@ def main():
         game = Game2048(grid_size)
         game.play()
         now = datetime.now()
-        update_db(id=count_db_rows(),
-                  gs=game.get_grid_size(),
-                  sc= int(game.get_score()),
-                  tsec=game.get_time(),
-                  dt=now.strftime('%d %b %Y %I:%M:%S %p'))
+        update_db(
+            id=count_db_rows(),
+            gs=game.get_grid_size(),
+            sc= int(game.get_score()),
+            tsec=game.get_time(),
+            dt=now.strftime('%d %b %Y %I:%M:%S %p')
+        )
 
 if (__name__=='__main__'):
     # Run only if needed to initialize or reset the database.

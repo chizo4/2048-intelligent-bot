@@ -7,7 +7,7 @@ Date created:
     11/2021
 
 Date edited:
-    06/2022
+    07/2022
 
 Author:
     Filip J. Cierkosz
@@ -36,9 +36,11 @@ class GridSelectionWindow:
         pygame.init()
         pygame.display.set_caption("2048: GRID SELECTION")
         pygame.font.init()
-        self.font = pygame.font.SysFont(FONT_BOARD[0], 
-                                        FONT_SIZES['select'], 
-                                        FONT_BOARD[1])
+        self.font = pygame.font.SysFont(
+            FONT_BOARD[0],
+            FONT_SIZES['select'],
+            FONT_BOARD[1]
+        )
         self.window = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.response = '4'
         # Initially, the game window does not show up. The selection grid
@@ -79,12 +81,40 @@ class GridSelectionWindow:
                     return
 
             self.window.fill(GRID_COLOR)
-            text_area = self.font.render('WELCOME TO THE 2048 GAME!', True, WINDOW_FONT_COLOR)
-            self.window.blit(text_area, text_area.get_rect(center=(250,30)))
-            text_area = self.font.render('INPUT GRID SIZE (3/4/5/6)', True, WINDOW_FONT_COLOR)
-            self.window.blit(text_area, text_area.get_rect(center=(250,75)))
-            text_area = self.font.render('AND CLICK ENTER:', True, WINDOW_FONT_COLOR)
-            self.window.blit(text_area, text_area.get_rect(center=(250,120)))
-            text_area = self.font.render(self.response, True, USER_FONT_COLOR)
-            self.window.blit(text_area, text_area.get_rect(center=(250,165)))
+            text_area = self.font.render(
+                'WELCOME TO THE 2048 GAME!',
+                True, 
+                WINDOW_FONT_COLOR
+            )
+            self.window.blit(
+                text_area,
+                text_area.get_rect(center=(250,30))
+            )
+            text_area = self.font.render(
+                'INPUT GRID SIZE (3/4/5/6)',
+                True, 
+                WINDOW_FONT_COLOR
+            )
+            self.window.blit(
+                text_area,
+                text_area.get_rect(center=(250,75))
+            )
+            text_area = self.font.render(
+                'AND CLICK ENTER:',
+                True,
+                WINDOW_FONT_COLOR
+            )
+            self.window.blit(
+                text_area,
+                text_area.get_rect(center=(250,120))
+            )
+            text_area = self.font.render(
+                self.response,
+                True,
+                USER_FONT_COLOR
+            )
+            self.window.blit(
+                text_area,
+                text_area.get_rect(center=(250,165))
+            )
             pygame.display.flip()
