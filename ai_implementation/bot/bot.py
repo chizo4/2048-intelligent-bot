@@ -33,7 +33,7 @@ class GameBot:
             Parameters:
                 self
         '''
-        self.EMPTY_SPOT_CONSTANT = 10
+        self.EMPTY_SPOT_CONST = 10
         self.SEARCH_DEPTH = 12
         self.SEARCHES_PER_MV = 24
         self.moves = ['right', 'left', 'up', 'down']
@@ -268,7 +268,7 @@ class GameBot:
                         self.insert_new_num()
                         costs[first_mv] += new_simulated_score
                         counter += 1  
-                costs[first_mv] += self.EMPTY_SPOT_CONSTANT*np.count_nonzero(self.grid==0)
+                costs[first_mv] += self.EMPTY_SPOT_CONST*np.count_nonzero(self.grid==0)
             self.grid = original_grid.copy()
 
         # Find the best move (one with the highest costs).
