@@ -1,21 +1,16 @@
 '''
-grid_selection.py
+user_implementation/gui/grid_selection.py
 
-2048 GAME PROJECT: Grid selection.
+2048-Project: Grid selection.
 
-Date created: 
-    11/2021
-
-Date edited:
-    07/2022
-
-Author:
-    Filip J. Cierkosz
+Author: Filip J. Cierkosz (2022)
 '''
+
 
 import pygame
 from pygame.locals import *
 from gui.graphics import *
+
 
 class GridSelectionWindow:
     '''
@@ -34,7 +29,7 @@ class GridSelectionWindow:
         self.HEIGHT = 200
         self.WIDTH = 500
         pygame.init()
-        pygame.display.set_caption("2048: GRID SELECTION")
+        pygame.display.set_caption('2048: GRID SELECTION')
         pygame.font.init()
         self.font = pygame.font.SysFont(
             FONT_BOARD[0],
@@ -67,17 +62,17 @@ class GridSelectionWindow:
             Parameters:
                 self
         '''
-        while (True):
+        while True:
             for event in pygame.event.get():
-                if (event.type==KEYDOWN):
-                    if (event.unicode.isdigit()):
+                if event.type == KEYDOWN:
+                    if event.unicode.isdigit():
                         self.response = event.unicode
-                    elif (event.key==K_BACKSPACE):
+                    elif event.key == K_BACKSPACE:
                         self.response = self.response[:-1]
-                    elif (event.key==K_RETURN and self.response in '3456' and self.response!=''):
+                    elif event.key == K_RETURN and self.response in '3456' and self.response != '':
                         self.play_game = True
                         return 
-                elif (event.type==QUIT):
+                elif event.type == QUIT:
                     return
 
             self.window.fill(GRID_COLOR)
@@ -88,16 +83,16 @@ class GridSelectionWindow:
             )
             self.window.blit(
                 text_area,
-                text_area.get_rect(center=(250,30))
+                text_area.get_rect(center=(250, 30))
             )
             text_area = self.font.render(
-                'INPUT GRID SIZE (3/4/5/6)',
+                'INPUT GRID SIZE - 3 : 4 : 5 : 6',
                 True, 
                 WINDOW_FONT_COLOR
             )
             self.window.blit(
                 text_area,
-                text_area.get_rect(center=(250,75))
+                text_area.get_rect(center=(250, 75))
             )
             text_area = self.font.render(
                 'AND CLICK ENTER:',
@@ -106,7 +101,7 @@ class GridSelectionWindow:
             )
             self.window.blit(
                 text_area,
-                text_area.get_rect(center=(250,120))
+                text_area.get_rect(center=(250, 120))
             )
             text_area = self.font.render(
                 self.response,
@@ -115,6 +110,6 @@ class GridSelectionWindow:
             )
             self.window.blit(
                 text_area,
-                text_area.get_rect(center=(250,165))
+                text_area.get_rect(center=(250, 165))
             )
             pygame.display.flip()
