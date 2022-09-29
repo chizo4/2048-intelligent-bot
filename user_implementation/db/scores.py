@@ -1,24 +1,20 @@
 '''
-scores.py
+user_implementation/db/scores.py
 
-2048 GAME PROJECT: Data handling with database and pandas dataframe.
+2048-Project: Data handling with database and pandas dataframe.
 
-Date created:
-    03/2022
-
-Date edited:
-    07/2022
-
-Author:
-    Filip J. Cierkosz
+Author: Filip J. Cierkosz (2022)
 '''
+
 
 import sqlite3
 import pandas as pd
 
+
 def init_db():
     '''
-    Initializes the database to store: user's ID, grid size, score, time played, date.
+    Initializes the database to store:
+        user's ID, grid size, score, time played, date.
     '''
     db = sqlite3.connect('db/scores.db')
     cursor = db.cursor()
@@ -42,7 +38,7 @@ def update_db(id, gs, sc, tsec, dt):
     '''
     # Update only if the execution of the game was full, i.e. the user did not
     # escape the game before losing.
-    if (tsec>0):
+    if tsec > 0:
         try:
             db = sqlite3.connect('db/scores.db')
             cursor = db.cursor()
@@ -98,10 +94,10 @@ def get_grid_best_score(gs):
         df = pd.read_sql_query(f'SELECT * FROM scores WHERE grid_size = {gs}', db)
 
         # Find the best score among filtered results.
-        best = df[df['score']==df['score'].max()]
+        best = df[df['score'] == df['score'].max()]
 
         # If dataframe is not empty, return the score. Otherwise, return 0.
-        if (not best.empty):
+        if not best.empty:
             return best.values[0][2]
 
         return 0
@@ -118,12 +114,3 @@ def print_records_db():
         print(df.to_string())
     except sqlite3.Error as e:
         print(f'Failed to process the DB. An error occurred:\n', e)
-
-# Initialize the database (executed only once, or when to recreate the DB).
-#initDB()
-
-# Display all the database records (for testing purposes).
-# To run file scores.py for purposes of printing DB records, change line 112:
-# from: db = sqlite3.connect('db/scores.db')
-# to: db = sqlite3.connect('scores.db')
-#print_records_db()
