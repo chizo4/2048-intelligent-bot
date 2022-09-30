@@ -308,7 +308,7 @@ class GameBot:
         start = self.set_timer()
 
         # Play as long as the game is neither over, nor won by the AI bot.
-        while (True):
+        while True:
             self.draw()
             self.update_score()
             text_area = self.font_score.render(
@@ -323,7 +323,7 @@ class GameBot:
             pygame.display.flip()
 
             # Case: BOT WIN.
-            if (self.score == 2048):
+            if self.score == 2048:
                 self.window.fill((GRID_COLOR))
                 self.timer = self.stop_timer(start)
                 text_area = self.font_msg.render(
@@ -387,5 +387,5 @@ class GameBot:
                 sleep(1)
                 return False
 
-            if (not (self.grid == old_grid).all()):
+            if not (self.grid == old_grid).all():
                 self.insert_new_num()
