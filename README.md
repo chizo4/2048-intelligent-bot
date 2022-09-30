@@ -11,7 +11,7 @@ Rules:
 - The game is controlled by the AI bot which selects most optimal moves using - [Monte Carlo Tree Search](https://en.wikipedia.org/wiki/Monte_Carlo_tree_search).
 - The game is terminated when the bot reaches the score of 2048, which denotes a goal state (or when it loses the game).
 
-<b>To read more information about the ```ai_implementation``` and running the bot - [FOLLOW THE LINK](https://github.com/chizo4/2048-Project/tree/main/ai_implementation).</b>
+<b>To read more information about the ```ai_implementation``` and running the bot - [click here](https://github.com/chizo4/2048-Project/tree/main/ai_implementation).</b>
 
 #
 
@@ -26,7 +26,7 @@ Rules:
 - The user's scores for each grid (along with time played and date played) are stored in a local SQLITE3 database; the DB records are processed using pandas.
 - Additionally, the implementation contains a Jupyter Notebook for simple analysis of the data collected in the database using several Python libraries, such as: pandas, matplotlib, etc., to possibly identify any patterns.
 
-<b>To read more information about the ```user_implementation``` and running it - [FOLLOW THE LINK](https://github.com/chizo4/2048-Project/tree/main/user_implementation).</b>
+<b>To read more information about the ```user_implementation``` and running it - [click here](https://github.com/chizo4/2048-Project/tree/main/user_implementation).</b>
 
 #
 
