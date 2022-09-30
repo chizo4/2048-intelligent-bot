@@ -20,8 +20,8 @@ Rules:
 The AI was tested for slightly more than 500 samples and the results were stored in a database. 
 
 Performance highlights based on [data](https://github.com/chizo4/2048-Project/blob/main/ai_implementation/notebook/bot_notebook.ipynb) collected while testing:
-- ```Probability of AI winning a game : 30.2%```
-- ```Probability of a score greater or equal to 1024 : 88.1%```
+- ```Probability of AI winning a game : 30.4%```
+- ```Probability of a score greater or equal to 1024 : 88.0%```
 - ```Average time to win a game : 68.4 sec```
 
 ❗ NB: The average time records can be rather described as biased, since it is mainly dependant on the performance of your machine. The reference point for time measurements in this experiment was 2020 M1 MacBook Pro.
