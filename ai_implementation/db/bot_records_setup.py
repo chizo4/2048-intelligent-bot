@@ -1,22 +1,20 @@
 '''
-bot_records_setup.py
+ai_implementation/db/bot_records_setup.py
 
-2048 GAME PROJECT: DB setup and data handling with pandas.
+2048-Project: DB setup and data handling with pandas.
 
-Date created:
-    06/2022
-
-Author:
-    Filip J. Cierkosz
+Author: Filip J. Cierkosz (2022)
 '''
+
 
 import sqlite3
 import pandas as pd
 
+
 def init_db():
     '''
-    Initializes the database to store: sample's ID, score, 
-    win/loss, time played, date.
+    Initializes the database to store: 
+        sample's ID, score, win/loss, time played, date.
     '''
     db = sqlite3.connect('db/bot_records.db')
     cursor = db.cursor()
@@ -27,7 +25,8 @@ def init_db():
             score INTEGER,
             win INTEGER,
             time_played_sec FLOAT,
-            date_played TEXT)'''
+            date_played TEXT
+        )'''
     )
     db.commit()
     db.close()
@@ -38,7 +37,7 @@ def update_db(win, score, t_sec, date):
     Updates the database inserting a new row.
     '''
     # Update only if the bot managed to run (i.e. no error/external interruption).
-    if (t_sec>0):
+    if t_sec > 0:
         try:
             db = sqlite3.connect('db/bot_records.db')
             cursor = db.cursor()
@@ -67,16 +66,7 @@ def print_records_db():
     '''
     try:
         db = sqlite3.connect('db/bot_records.db')
-        df = pd.read_sql_query("SELECT * FROM ", db)
+        df = pd.read_sql_query('SELECT * FROM ', db)
         print(df.to_string())
     except sqlite3.Error as e:
         print(f'Failed to process the DB. An error occurred:\n', e)
-
-# Initialize the database (executed only once, or when to recreate the DB).
-#initDB()
-
-# Display all the database records (for testing purposes).
-# To run file scores.py for purposes of printing DB records, change line 112:
-# from: db = sqlite3.connect('db/scores.db')
-# to: db = sqlite3.connect('scores.db')
-#print_records_db()

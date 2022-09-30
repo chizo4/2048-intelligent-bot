@@ -361,5 +361,5 @@ class Game2048:
                 sleep(3)
                 break
 
-            if not (self.grid==old_grid).all():
+            if not (self.grid == old_grid).all():
                 self.insert_new_num()

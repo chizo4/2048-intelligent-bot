@@ -1,21 +1,16 @@
 '''
-main.py
+ai_implementation/main.py
 
-2048 GAME PROJECT: Main program for running AI.
+2048-Project: Main program for running AI.
 
-Date created:
-    04/2022
-
-Date edited:
-    07/2022
-
-Author:
-    Filip J. Cierkosz
+Author: Filip J. Cierkosz (2022)
 '''
+
 
 from bot.bot import GameBot
 from db.bot_records_setup import init_db, update_db
 from datetime import datetime
+
 
 def run_bot():
     '''
@@ -43,12 +38,12 @@ def run_tests():
         run_bot()
         
 
-if (__name__=='__main__'):
+if __name__=='__main__':
     # Run only to initialize or reset the database.
     # init_db()
 
     # Run one sample of the AI bot.
     run_bot()
 
-    # Uncomment to run 500 samples.
+    # Uncomment below to run 500 samples.
     # run_tests()
