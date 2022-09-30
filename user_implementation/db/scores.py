@@ -92,8 +92,6 @@ def get_grid_best_score(gs):
     try:
         db = sqlite3.connect('db/scores.db')
         df = pd.read_sql_query(f'SELECT * FROM scores WHERE grid_size = {gs}', db)
-
-        # Find the best score among filtered results.
         best = df[df['score'] == df['score'].max()]
 
         # If dataframe is not empty, return the score. Otherwise, return 0.
