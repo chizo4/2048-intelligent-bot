@@ -1,32 +1,6 @@
-# 2048-Project 📟
+# ```2048-intelligent-bot``` 🤖
 
-## The repository contains my own implementation of [2048](https://en.wikipedia.org/wiki/2048_(video_game)), which used to be recognized as a very popular mobile game back in the day. The game was developed in Python using number of popular libraries, e.g. [pygame](https://www.pygame.org/news), [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/), etc. The repo contains two slightly different versions of the game. Please follow the descriptions below to find out more about the code!
-
-## ```ai_implementation``` ~ aimed to be solved by an intelligent bot
-
-Rules:
-- The goal of the bot is to obtain at least one square with the value of 2048 in the 4x4 grid.
-- The game automatically initializes with a specified 4x4 grid size.
-- The only value inserted into the grid is 2 (100% probability).
-- The game is controlled by the AI bot which selects most optimal moves using - [Monte Carlo Tree Search](https://en.wikipedia.org/wiki/Monte_Carlo_tree_search).
-- The game is terminated when the bot reaches the score of 2048, which denotes a goal state (or when it loses the game).
-
-<b>To read more information about the ```ai_implementation``` and running the bot - [click here](https://github.com/chizo4/2048-Project/tree/main/ai_implementation).</b>
-
-#
-
-## ```user_implementation``` ~ aimed to be played by a human user
-
-Rules:
-- The user might select a grid 3x3, 4x4, 5x5, or 6x6. 
-- The grid is initialized with 2 random numbers (either 1 (highest probability rate), 2 or 4).
-- The original game of 2048 starts from 2, whereas this example starts from the value of 2<sup>0</sup> instead of 2<sup>1</sup> in order to make it more diffcult (and more CS-friendly)!
-- The game itself is controlled by the user using arrow keys.
-- The aim is to obtain the highest possible power of 2 in the board, i.e. the game goes further than 2048 and user plays after as long as they do not lose.
-- The user's scores for each grid (along with time played and date played) are stored in a local SQLITE3 database; the DB records are processed using pandas.
-- Additionally, the implementation contains a Jupyter Notebook for simple analysis of the data collected in the database using several Python libraries, such as: pandas, matplotlib, etc., to possibly identify any patterns.
-
-<b>To read more information about the ```user_implementation``` and running it - [click here](https://github.com/chizo4/2048-Project/tree/main/user_implementation).</b>
+## The repository contains my own implementation of [2048](https://en.wikipedia.org/wiki/2048_(video_game)), which used to be recognized as a very popular mobile game back in the day. The game was developed in Python using a number of popular libraries, e.g. [pygame](https://www.pygame.org/news), [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/), etc. The aim of the project was to develop an intelligent bot to solve the game domain problem. Please follow the descriptions below to find out more about the code!
 
 #
 
@@ -38,5 +12,88 @@ Rules:
 <p align="center">
   <img src="./images/image_gui.png" width="400" alt="The Image of 2048 Game Board."/>
 </p>
+
+#
+
+## About the Implementation
+
+The bot attempts to solve the game and reach the goal state by following the logic of [Monte Carlo Tree Search](https://en.wikipedia.org/wiki/Monte_Carlo_tree_search). Essentially, it means that the algorithm expands the decision tree by simulating the future states of the current state of the 4x4 grid in order to calculate ```costs``` for each of the four moves: ```['up', 'down', 'right', 'left']```. The ```costs``` are calculated by combining the highest score obtained in each simulated grid and the number of empty spots mutiplied by specified constants. Each selected best move is denoted by the highest ```costs``` value. The number of searches per move and the search depth values could be increased, but the problem is that, at some point, they dramatically affect the runtime of search without a decent increase in its accuracy. Including the number of empty spots multiplied by the constant might seem unconventional at first, but it definitely affects the speed of the search and also slightly increases the accurracy of the algorithm.
+
+#
+
+## Rules Recap
+
+Rules:
+- The goal of the bot is to obtain at least one square with the value of 2048 in the 4x4 grid.
+- The game automatically initializes with a specified 4x4 grid size.
+- The only value inserted into the grid is 2 (100% probability).
+- The game is controlled by the AI bot which selects most optimal moves using - [Monte Carlo Tree Search](https://en.wikipedia.org/wiki/Monte_Carlo_tree_search).
+- The game is terminated when the bot reaches the score of 2048, which denotes a goal state (or when it loses the game).
+
+#
+
+## Bot Performance
+
+The AI was tested for slightly more than 500 samples and the results were stored in an SQLITE3 database. 
+
+Performance highlights based on [data](https://github.com/chizo4/2048-Project/blob/main/ai_implementation/notebook/bot_notebook.ipynb) collected while testing:
+- ```Probability of AI winning a game : 30.6%```
+- ```Probability of a score greater or equal to 1024 : 88.0%```
+- ```Average time to win a game : 68.39 sec```
+
+❗ NB: The average time records can be rather described as biased, since it is mainly dependant on the performance of your machine. The reference point for time measurements in this experiment was 2020 M1 MacBook Pro.
+
+The whole analysis of the results in a Jupyter Notebook can be accessed [here](https://github.com/chizo4/2048-Project/blob/main/ai_implementation/notebook/bot_notebook.ipynb).
+
+#
+
+## Running AI
+
+- Before cloning the remote version of the repo and start playing with the code, please make sure that you have ```python3``` and ```pip``` installed on your machine by running the following commands:
+
+```
+python3 -V
+```
+
+```
+pip -V
+```
+
+❗ If your shell failed to recognize these commands, please visit [pip](https://pip.pypa.io/en/stable/installation/) and [python](https://www.python.org/downloads/) to find out more about the installation process.
+
+- Otherwise, if you manage to see the versions of ```python3``` and ```pip``` after running the commands, you can clone the whole repo:
+
+```
+git clone https://github.com/chizo4/2048-intelligent-bot
+```
+
+- After cloning it, please navigate into the root directory of the project and run the bash script to install any needed libraries. Do not worry if you have some of them pre-installed, the script will only install the ones that are missing. Please run the commands:
+
+```
+cd 2048-Project
+```
+
+```
+bash setup.sh
+```
+
+- The next step to follow is to navigate into the ```ai_implementation``` directory:
+
+```
+cd ai_implementation
+```
+
+- Finally, you are able to run the AI bot invoking:
+
+
+```
+python main.py
+```
+
+#
+
+## Contribution & Collaboration
+
+In case you had an idea on how to improve the performance of the AI bot by either increasing its win percentage or decreasing the time needed to win a game, feel free to contact me via of the links included in my [GitHub bio](https://github.com/chizo4) and then you might contribute to the project by creating a new branch with a pull request.
 
 #
