@@ -1,7 +1,7 @@
 '''
 code/db/db_tools.py
 
-2048-Project: DB tools and data handling with pandas.
+2048-intelligent-bot: DB tools and data handling with pandas.
 
 Author: Filip J. Cierkosz 2022 (updated: 2023)
 '''
