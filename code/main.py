@@ -3,12 +3,12 @@ ai_implementation/main.py
 
 2048-Project: Main program for running AI.
 
-Author: Filip J. Cierkosz (2022)
+Author: Filip J. Cierkosz 2022 (updated: 2023)
 '''
 
 
 from bot.bot import GameBot
-from db.bot_records_setup import init_db, update_db
+from db.db_tools import init_db, update_db
 from datetime import datetime
 
 
