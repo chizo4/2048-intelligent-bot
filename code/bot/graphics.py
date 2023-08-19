@@ -1,7 +1,7 @@
 '''
-ai_implementation/bot/graphics_bot.py
+code/bot/graphics.py
 
-2048-Project: Graphics adjustments for AI bot.
+2048-intelligent-bot: Graphics adjustments for AI bot.
 
 Author: Filip J. Cierkosz (2022)
 '''
@@ -18,7 +18,7 @@ GRID_FONT_COLOR = '#12023d'
 WINDOW_FONT_COLOR = '#fafafa'
 USER_FONT_COLOR = '#a2ff29'
 
-# Cell colors corresponding with their numerical values on the board. 
+# Cell colors corresponding with their numerical values on the board.
 CELL_COLORS = {
     0: '#fafafa',
     1: '#c4beb5',
@@ -38,6 +38,6 @@ CELL_COLORS = {
 # Font sizes for different usages.
 FONT_SIZES = {
     '4': 35,
-    'finalMsg': 30,
+    'final_msg': 30,
     'score': 25
 }

@@ -12,7 +12,7 @@ import numpy as np
 import pygame
 from pygame.locals import *
 from time import sleep, time
-from bot.graphics_bot import *
+from bot.graphics import *
 
 
 class GameBot:
@@ -59,7 +59,7 @@ class GameBot:
         )
         self.font_msg = pygame.font.SysFont(
             FONT_BOARD[0],
-            FONT_SIZES['finalMsg'],
+            FONT_SIZES['final_msg'],
             FONT_BOARD[1]
         )
 
