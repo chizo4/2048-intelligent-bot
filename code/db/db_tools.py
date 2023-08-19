@@ -1,9 +1,9 @@
 '''
-ai_implementation/db/bot_records_setup.py
+code/db/db_tools.py
 
-2048-Project: DB setup and data handling with pandas.
+2048-Project: DB tools and data handling with pandas.
 
-Author: Filip J. Cierkosz (2022)
+Author: Filip J. Cierkosz 2022 (updated: 2023)
 '''
 
 
@@ -35,6 +35,12 @@ def init_db():
 def update_db(win, score, t_sec, date):
     '''
     Updates the database inserting a new row.
+
+        Parameters:
+            win (int)     : 1 for win, 0 for loss
+            score (int)   : game score
+            t_sec (float) : game time (in seconds)
+            date          : game date
     '''
     # Update only if the bot managed to run (i.e. no error/external interruption).
     if t_sec > 0:
@@ -50,13 +56,13 @@ def update_db(win, score, t_sec, date):
             db.close()
             print(
                 f'''The DB has been successfully updated with new data:\n
-                    score : {score}
-                    win : {win}
-                    time_played_sec : {t_sec},
-                    date_played : {date}\n'''
+                    - score : {score}
+                    - win : {win}
+                    - time_played_sec : {t_sec},
+                    - date_played : {date}\n'''
             )
         except sqlite3.Error as e:
-            print(f'Failed to update the DB. An error occurred:\n', e)
+            print('Failed to update the DB. An error occurred:\n', e)
     else:
         print('\nNo updates to the DB.\n')
 
@@ -69,4 +75,4 @@ def print_records_db():
         df = pd.read_sql_query('SELECT * FROM ', db)
         print(df.to_string())
     except sqlite3.Error as e:
-        print(f'Failed to process the DB. An error occurred:\n', e)
+        print('Failed to process the DB. An error occurred:\n', e)
