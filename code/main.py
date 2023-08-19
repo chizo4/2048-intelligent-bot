@@ -1,14 +1,14 @@
 '''
-ai_implementation/main.py
+code/main.py
 
-2048-Project: Main program for running AI.
+2048-intelligent-bot: Main program for running AI bot.
 
-Author: Filip J. Cierkosz (2022)
+Author: Filip J. Cierkosz 2022 (updated: 2023)
 '''
 
 
-from bot.bot import GameBot
-from db.bot_records_setup import init_db, update_db
+from bot.bot import Bot
+from db.db_tools import init_db, update_db
 from datetime import datetime
 
 
@@ -17,13 +17,13 @@ def run_bot():
     Main method to perform one sample run of the AI bot
     and storing the results in DB.
     '''
-    bot = GameBot()
+    bot = Bot()
     bot.play()
     now = datetime.now()
     update_db(
-        win=bot.is_win(),
-        score=int(bot.get_score()),
-        t_sec=bot.get_time(),
+        win=bot.win,
+        score=int(bot.score),
+        t_sec=bot.timer,
         date=now.strftime('%d %b %Y %I:%M:%S %p')
     )
 
