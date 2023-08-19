@@ -1,7 +1,7 @@
 '''
 code/bot/graphics.py
 
-2048-intelligent-bot: Graphics adjustments for AI bot.
+2048-intelligent-bot: Graphics adjustments for AI bot/game board.
 
 Author: Filip J. Cierkosz (2022)
 '''
