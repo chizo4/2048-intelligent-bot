@@ -16,11 +16,11 @@ def init_db():
     Initializes the database to store: 
         sample's ID, score, win/loss, time played, date.
     '''
-    db = sqlite3.connect('db/bot_records.db')
+    db = sqlite3.connect('db/bot_records_2023.db')
     cursor = db.cursor()
-    cursor.execute('DROP TABLE IF EXISTS bot_records')
+    cursor.execute('DROP TABLE IF EXISTS bot_records_2023')
     cursor.execute(
-        '''CREATE TABLE bot_records (
+        '''CREATE TABLE bot_records_2023 (
             id INTEGER PRIMARY KEY,
             score INTEGER,
             win INTEGER,
@@ -45,9 +45,9 @@ def update_db(win, score, t_sec, date):
     # Update only if the bot managed to run (i.e. no error/external interruption).
     if t_sec > 0:
         try:
-            db = sqlite3.connect('db/bot_records.db')
+            db = sqlite3.connect('db/bot_records_2023.db')
             cursor = db.cursor()
-            insert_with_params = '''INSERT INTO bot_records
+            insert_with_params = '''INSERT INTO bot_records_2023
                                     (score, win, time_played_sec, date_played)
                                     VALUES (?, ?, ?, ?);'''
             data = (score, win, t_sec, date)
@@ -71,7 +71,7 @@ def print_records_db():
     Displays the database records using pandas dataframe.
     '''
     try:
-        db = sqlite3.connect('db/bot_records.db')
+        db = sqlite3.connect('db/bot_records_2023.db')
         df = pd.read_sql_query('SELECT * FROM ', db)
         print(df.to_string())
     except sqlite3.Error as e:
