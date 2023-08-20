@@ -7,7 +7,6 @@ Author: Filip J. Cierkosz 2022 (updated: 2023)
 '''
 
 
-from time import sleep
 import numpy as np
 import pygame
 from pygame.locals import *
@@ -18,23 +17,102 @@ from bot.graphics import *
 class Bot(GameBoard):
     '''
     -----------
-    Class to create an AI bot instance to solve 2048.
+    Class to create an AI bot instance that solves 2048.
     -----------
     '''
 
     def __init__(self):
         '''
-        Constructor to initialize the bot and game board (through parent class).
+        Constructor to initialize the bot (and game GUI through parent class).
 
             Parameters:
                 self
         '''
         super().__init__()
 
-        # Search-related constants.
-        self.EMPTY_SPOT_CONST = 10
-        self.SEARCH_DEPTH = 12
-        self.SEARCHES_PER_MV = 24
+        # Constant coefficient for dynamic search.
+        self.SEARCH_PER_MOVE_COEFF = 10
+        self.SEARCH_DEPTH_COEFF = 4
+        self.SEARCH_COEFF = 200
+        self.EMPTY_SPOT_COEFF = 10
+
+        # Dictionary for calculating costs while searching.
+        self.costs = {mv: 0 for mv in self.MOVES}
+
+        self.searches_per_move = 0
+        self.search_depth = 0
+        self.move_num = 0
+
+    def update_costs(self, move, score):
+        '''
+        Updates the cost using score sum and the heuristics for counting empty
+        spots in the grid.
+
+            Parameters:
+                self
+                move (str)  : Current move.
+                score (int) : Score sum for the current move after simulations.
+        '''
+        self.costs[move] += score
+        self.costs[move] += self.EMPTY_SPOT_COEFF * np.count_nonzero(self.grid == 0)
+
+    def update_search_params(self):
+        '''
+        Dynamically update the values for search expansion. The further stage 
+        of the game, the deeper the expansion of the game tree (search tree).
+
+            Parameters:
+                self
+        '''
+        self.search_depth = self.SEARCH_DEPTH_COEFF * (1 + (self.move_num // self.SEARCH_COEFF))
+        self.searches_per_move = self.SEARCH_PER_MOVE_COEFF * (1 + (self.move_num // self.SEARCH_COEFF))
+    
+    def select_best_move(self):
+        '''
+        Selects the best move after full run of simulations. The best move
+        is denoted by the max costs in the costs dictionary.
+
+            Parameters:
+                self
+
+            Returns:
+                (str) : Name of the most optimal move.
+        '''
+        if all(val == 0 for val in self.costs.values()):
+            return self.shuffle_move()
+        
+        return max(self.costs, key=self.costs.get)
+
+    def simulate_move(self):
+        '''
+        Simulates the future state of the game for a given move.
+
+            Parameters:
+                self
+            
+            Returns:
+                total_score (int) : Total score obtained in the simulations.
+        '''
+        counter = 1
+        total_score = 0
+        game_over = False
+
+        while counter < self.search_depth and not game_over:
+            prev_simulated_grid = self.grid.copy()
+            random_move = self.shuffle_move()
+            self.make_move(random_move)
+
+            # State of the game after random move.
+            new_simulated_score = self.score
+            game_over = self.check_if_over()
+            diff_random_move = (not np.array_equal(self.grid, prev_simulated_grid))
+
+            if not game_over and diff_random_move:
+                self.insert_new_num()
+                counter += 1
+                total_score += new_simulated_score
+
+        return total_score
 
     def search_move(self):
         '''
@@ -47,51 +125,45 @@ class Bot(GameBoard):
                 self
 
             Returns:
-                best_mv (str) : Best searched move ('right'/'left'/'up'/'down').
+                best_move (str) : Best searched move ('right'/'left'/'up'/'down').
         '''
         original_grid = self.grid.copy()
-        costs =  {mv: 0 for mv in self.MOVES}
 
-        for first_mv in self.MOVES:
-            self.make_move(first_mv)
-            game_over_first_mv = self.check_if_over()
-            score_first_mv = np.max(self.grid)
+        for first_move in self.MOVES:
+            self.make_move(first_move)
 
-            if (not game_over_first_mv) and (not (self.grid == original_grid).all()):
+            # State of the game after first move.
+            score_first_move = np.max(self.grid)
+            game_over_first_move = self.check_if_over()
+            diff_first_move = (not (self.grid == original_grid).all())
+
+            if not game_over_first_move and diff_first_move:
                 self.insert_new_num()
-                costs[first_mv] += score_first_mv
                 search_board_after_first_insert = self.grid.copy()
+
+                # Update the costs for the current move.
+                self.update_costs(first_move, score_first_move)
             else:
                 continue
 
-            for _ in range(self.SEARCHES_PER_MV):
-                counter = 1
+            # Simulate the future state of the game for the current first move.
+            for _ in range(self.searches_per_move):
                 self.grid = search_board_after_first_insert.copy()
-                game_over = False
+                total_score = self.simulate_move()
 
-                while counter < self.SEARCH_DEPTH and not game_over:
-                    random_mv = self.shuffle_move()
-                    prev_simulated_grid = self.grid.copy()
-                    self.make_move(random_mv)
-                    new_simulated_score = self.score
-                    game_over = self.check_if_over()
+                # Update the costs after simulation.
+                self.update_costs(first_move, total_score)
 
-                    if not game_over and not (self.grid == prev_simulated_grid).all():
-                        self.insert_new_num()
-                        costs[first_mv] += new_simulated_score
-                        counter += 1
-                costs[first_mv] += self.EMPTY_SPOT_CONST * np.count_nonzero(self.grid == 0)
             self.grid = original_grid.copy()
 
-        # Find the best move (one with the highest costs).
-        best_mv = max(costs, key=costs.get)
-        # Reset the grid to its original state.
+        # Find the best (most optimal) move denoted by highest cost.
+        best_move = self.select_best_move()
+
+        # Reset the grid and the dictionary to their original states.
         self.grid = original_grid.copy()
+        self.costs = {mv: 0 for mv in self.MOVES}
 
-        if all(val == 0 for val in costs.values()):
-            return self.shuffle_move()
-
-        return best_mv
+        return best_move
 
     def play(self):
         '''
@@ -122,70 +194,28 @@ class Bot(GameBoard):
 
                 # Case: BOT WIN.
                 if self.score == 2048:
-                    self.window.fill((GRID_COLOR))
                     self.timer = self.stop_timer(start)
-                    text_area = self.font_msg.render(
-                        'BOT WON THE GAME!',
-                        True,
-                        WINDOW_FONT_COLOR
-                    )
-                    self.window.blit(
-                        text_area,
-                        text_area.get_rect(
-                            center=(self.WIDTH / 2, self.HEIGHT / 2 - 50)
-                        )
-                    )
-                    text_area = self.font_msg.render(
-                        f'TIME PLAYED: {self.timer:.1f} SEC',
-                        True,
-                        WINDOW_FONT_COLOR
-                    )
-                    self.window.blit(
-                        text_area,
-                        text_area.get_rect(
-                            center=(self.WIDTH / 2, self.HEIGHT / 2 + 20)
-                        )
-                    )
-                    pygame.display.flip()
                     self.win = 1
-                    sleep(0.5)
-                    return True
+                    self.draw_win_screen()
+                    return
 
+                # Perform search for the next move.
                 old_grid = self.grid.copy()
                 next_move = self.search_move()
+
+                # Peform the most optimal move.
                 self.make_move(next_move)
+                self.move_num += 1
 
                 # Case: BOT LOSS.
                 if self.check_if_over():
-                    self.window.fill((GRID_COLOR))
                     self.timer = self.stop_timer(start)
-                    text_area = self.font_msg.render(
-                        'BOT LOST.',
-                        True,
-                        WINDOW_FONT_COLOR
-                    )
-                    self.window.blit(
-                        text_area,
-                        text_area.get_rect(
-                            center=(self.WIDTH / 2, self.HEIGHT / 2 - 50)
-                        )
-                    )
-                    text_area = self.font_msg.render(
-                        f'TIME PLAYED: {self.timer:.1f} SEC',
-                        True,
-                        WINDOW_FONT_COLOR
-                    )
-                    self.window.blit(
-                        text_area,
-                        text_area.get_rect(
-                            center=(self.WIDTH / 2, self.HEIGHT / 2 + 20)
-                        )
-                    )
-                    pygame.display.flip()
-                    sleep(1)
-                    return False
+                    self.draw_loss_screen()
+                    return
 
                 if not (self.grid == old_grid).all():
+                    # Update the search-related params and insert new number.
+                    self.update_search_params()
                     self.insert_new_num()
         except KeyboardInterrupt:
             print('\nCtrl+C detected. Exiting the game...\n')
