@@ -18,43 +18,102 @@ from bot.graphics import *
 class Bot(GameBoard):
     '''
     -----------
-    Class to create an AI bot instance to solve 2048.
+    Class to create an AI bot instance that solves 2048.
     -----------
     '''
 
     def __init__(self):
         '''
-        Constructor to initialize the bot and game board (through parent class).
+        Constructor to initialize the bot (and game GUI through parent class).
 
             Parameters:
                 self
         '''
         super().__init__()
 
+        # Constant coefficient for dynamic search.
         self.SEARCH_PER_MOVE_COEFF = 10
         self.SEARCH_DEPTH_COEFF = 4
         self.SEARCH_COEFF = 200
         self.EMPTY_SPOT_COEFF = 10
 
+        # Dictionary for calculating costs while searching.
+        self.costs = {mv: 0 for mv in self.MOVES}
+
         self.searches_per_move = 0
         self.search_depth = 0
         self.move_num = 0
 
+    def update_costs(self, move, score):
+        '''
+        Updates the cost using score sum and the heuristics for counting empty
+        spots in the grid.
+
+            Parameters:
+                self
+                move (str)  : Current move.
+                score (int) : Score sum for the current move after simulations.
+        '''
+        self.costs[move] += score
+        self.costs[move] += self.EMPTY_SPOT_COEFF * np.count_nonzero(self.grid == 0)
+
     def update_search_params(self):
         '''
         Dynamically update the values for search expansion. The further stage 
-        of the game, the deeper the expansion of the game tree.
+        of the game, the deeper the expansion of the game tree (search tree).
 
             Parameters:
                 self
         '''
-        self.searches_per_move = self.SEARCH_PER_MOVE_COEFF * (1 + (self.move_num // self.SEARCH_COEFF))
         self.search_depth = self.SEARCH_DEPTH_COEFF * (1 + (self.move_num // self.SEARCH_COEFF))
+        self.searches_per_move = self.SEARCH_PER_MOVE_COEFF * (1 + (self.move_num // self.SEARCH_COEFF))
+    
+    def select_best_move(self):
+        '''
+        Selects the best move after full run of simulations. The best move
+        is denoted by the max costs in the costs dictionary.
 
-        print(f'self.searches_per_move : {self.searches_per_move}')
-        print(f'self.move_num : {self.move_num}')
-        print(f'self.search_depth : {self.search_depth}')
+            Parameters:
+                self
 
+            Returns:
+                (str) : Name of the most optimal move.
+        '''
+        if all(val == 0 for val in self.costs.values()):
+            return self.shuffle_move()
+        
+        return max(self.costs, key=self.costs.get)
+
+    def simulate_move(self):
+        '''
+        Simulates the future state of the game for a given move.
+
+            Parameters:
+                self
+            
+            Returns:
+                total_score (int) : Total score obtained in the simulations.
+        '''
+        counter = 1
+        total_score = 0
+        game_over = False
+
+        while counter < self.search_depth and not game_over:
+            prev_simulated_grid = self.grid.copy()
+            random_move = self.shuffle_move()
+            self.make_move(random_move)
+
+            # State of the game after random move.
+            new_simulated_score = self.score
+            game_over = self.check_if_over()
+            diff_random_move = (not np.array_equal(self.grid, prev_simulated_grid))
+
+            if not game_over and diff_random_move:
+                self.insert_new_num()
+                counter += 1
+                total_score += new_simulated_score
+
+        return total_score
 
     def search_move(self):
         '''
@@ -70,7 +129,6 @@ class Bot(GameBoard):
                 best_move (str) : Best searched move ('right'/'left'/'up'/'down').
         '''
         original_grid = self.grid.copy()
-        costs = {mv: 0 for mv in self.MOVES}
 
         for first_move in self.MOVES:
             self.make_move(first_move)
@@ -85,46 +143,26 @@ class Bot(GameBoard):
                 search_board_after_first_insert = self.grid.copy()
 
                 # Update the costs for the current move.
-                costs[first_move] += score_first_move
-                costs[first_move] += self.EMPTY_SPOT_COEFF * np.count_nonzero(self.grid == 0)
+                self.update_costs(first_move, score_first_move)
             else:
                 continue
 
             # Simulate the future state of the game for the current first move.
             for _ in range(self.searches_per_move):
                 self.grid = search_board_after_first_insert.copy()
-                counter = 1
-                game_over = False
+                total_score = self.simulate_move()
 
-                while counter < self.search_depth and not game_over:
-                    prev_simulated_grid = self.grid.copy()
-                    random_move = self.shuffle_move()
-                    self.make_move(random_move)
+                # Update the costs after simulation.
+                self.update_costs(first_move, total_score)
 
-                    # State of the game after random move.
-                    new_simulated_score = self.score
-                    game_over = self.check_if_over()
-                    diff_random_move = (not (self.grid == prev_simulated_grid).all())
-
-                    if not game_over and diff_random_move:
-                        self.insert_new_num()
-                        counter += 1
-
-                        # Update the costs for the current score in simulations.
-                        costs[first_move] += new_simulated_score
-
-                # Update the costs by the number of empty spots heuristics.
-                costs[first_move] += self.EMPTY_SPOT_COEFF * np.count_nonzero(self.grid == 0)
             self.grid = original_grid.copy()
 
-        # Find the best move (one with the highest costs).
-        best_move = max(costs, key=costs.get)
+        # Find the best (most optimal) move denoted by highest cost.
+        best_move = self.select_best_move()
 
-        # Reset the grid to its original state.
+        # Reset the grid and the dictionary to their original states.
         self.grid = original_grid.copy()
-
-        if all(val == 0 for val in costs.values()):
-            return self.shuffle_move()
+        self.costs = {mv: 0 for mv in self.MOVES}
 
         return best_move
 
@@ -190,7 +228,7 @@ class Bot(GameBoard):
                 old_grid = self.grid.copy()
                 next_move = self.search_move()
 
-                # Make the move.
+                # Peform the most optimal move.
                 self.make_move(next_move)
                 self.move_num += 1
 
