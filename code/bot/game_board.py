@@ -13,7 +13,7 @@ import random
 import numpy as np
 import pygame
 from pygame.locals import *
-from time import time
+from time import time, sleep
 from bot.graphics import *
 
 
@@ -144,6 +144,72 @@ class GameBoard:
                         text_area,
                         text_area.get_rect(center=(x + self.SQUARE_SIZE / 2, y + self.SQUARE_SIZE / 2))
                     )
+    
+    def draw_loss_screen(self):
+        '''
+        Displays the screen on bot loss.
+
+            Parameters:
+                self
+        '''
+        self.window.fill((GRID_COLOR))
+        text_area = self.font_msg.render(
+            'BOT LOST.',
+            True,
+            WINDOW_FONT_COLOR
+        )
+        self.window.blit(
+            text_area,
+            text_area.get_rect(
+                center=(self.WIDTH / 2, self.HEIGHT / 2 - 50)
+            )
+        )
+        text_area = self.font_msg.render(
+            f'TIME PLAYED: {self.timer:.1f} SEC',
+            True,
+            WINDOW_FONT_COLOR
+        )
+        self.window.blit(
+            text_area,
+            text_area.get_rect(
+                center=(self.WIDTH / 2, self.HEIGHT / 2 + 20)
+            )
+        )
+        pygame.display.flip()
+        sleep(1)
+
+    def draw_win_screen(self):
+        '''
+        Displays the screen on bot win.
+
+            Parameters:
+                self
+        '''
+        self.window.fill((GRID_COLOR))
+        text_area = self.font_msg.render(
+            'BOT WINS THE GAME!',
+            True,
+            WINDOW_FONT_COLOR
+        )
+        self.window.blit(
+            text_area,
+            text_area.get_rect(
+                center=(self.WIDTH / 2, self.HEIGHT / 2 - 50)
+            )
+        )
+        text_area = self.font_msg.render(
+            f'TIME PLAYED: {self.timer:.1f} SEC',
+            True,
+            WINDOW_FONT_COLOR
+        )
+        self.window.blit(
+            text_area,
+            text_area.get_rect(
+                center=(self.WIDTH / 2, self.HEIGHT / 2 + 20)
+            )
+        )
+        pygame.display.flip()
+        sleep(1)
 
     def insert_new_num(self, n=1):
         '''

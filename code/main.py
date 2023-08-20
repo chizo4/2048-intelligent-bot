@@ -36,7 +36,7 @@ def run_tests():
     '''
     for _ in range(500):
         run_bot()
-        
+
 
 if __name__=='__main__':
     # Run only to initialize or reset the database.

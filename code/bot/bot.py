@@ -7,7 +7,6 @@ Author: Filip J. Cierkosz 2022 (updated: 2023)
 '''
 
 
-from time import sleep
 import numpy as np
 import pygame
 from pygame.locals import *
@@ -195,34 +194,10 @@ class Bot(GameBoard):
 
                 # Case: BOT WIN.
                 if self.score == 2048:
-                    self.window.fill((GRID_COLOR))
                     self.timer = self.stop_timer(start)
-                    text_area = self.font_msg.render(
-                        'BOT WON THE GAME!',
-                        True,
-                        WINDOW_FONT_COLOR
-                    )
-                    self.window.blit(
-                        text_area,
-                        text_area.get_rect(
-                            center=(self.WIDTH / 2, self.HEIGHT / 2 - 50)
-                        )
-                    )
-                    text_area = self.font_msg.render(
-                        f'TIME PLAYED: {self.timer:.1f} SEC',
-                        True,
-                        WINDOW_FONT_COLOR
-                    )
-                    self.window.blit(
-                        text_area,
-                        text_area.get_rect(
-                            center=(self.WIDTH / 2, self.HEIGHT / 2 + 20)
-                        )
-                    )
-                    pygame.display.flip()
                     self.win = 1
-                    sleep(1)
-                    return True
+                    self.draw_win_screen()
+                    return
 
                 # Perform search for the next move.
                 old_grid = self.grid.copy()
@@ -234,33 +209,9 @@ class Bot(GameBoard):
 
                 # Case: BOT LOSS.
                 if self.check_if_over():
-                    self.window.fill((GRID_COLOR))
                     self.timer = self.stop_timer(start)
-                    text_area = self.font_msg.render(
-                        'BOT LOST.',
-                        True,
-                        WINDOW_FONT_COLOR
-                    )
-                    self.window.blit(
-                        text_area,
-                        text_area.get_rect(
-                            center=(self.WIDTH / 2, self.HEIGHT / 2 - 50)
-                        )
-                    )
-                    text_area = self.font_msg.render(
-                        f'TIME PLAYED: {self.timer:.1f} SEC',
-                        True,
-                        WINDOW_FONT_COLOR
-                    )
-                    self.window.blit(
-                        text_area,
-                        text_area.get_rect(
-                            center=(self.WIDTH / 2, self.HEIGHT / 2 + 20)
-                        )
-                    )
-                    pygame.display.flip()
-                    sleep(1)
-                    return False
+                    self.draw_loss_screen()
+                    return
 
                 if not (self.grid == old_grid).all():
                     # Update the search-related params and insert new number.
