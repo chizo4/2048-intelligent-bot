@@ -29,12 +29,12 @@ def run_bot():
 
 def run_tests():
     '''
-    Performs 500 sample runs of the AI bot and stores 
+    Performs 100 sample runs of the AI bot and stores 
     the results in the initialized database. 
 
     NB: Takes several hours to complete!
     '''
-    for _ in range(500):
+    for _ in range(100):
         run_bot()
 
 
@@ -45,5 +45,5 @@ if __name__=='__main__':
     # Run one sample of the AI bot.
     run_bot()
 
-    # Uncomment below to run 500 samples.
+    # Uncomment below to run 100 samples.
     # run_tests()
