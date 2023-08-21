@@ -1,7 +1,7 @@
 # ```2048-intelligent-bot``` 🤖
 
 > **Note**
-Your note text here
+I implemented the first version of AI during my first year of studies in early 2022. Back then, the project's win rate was hovering just above 30.0%. Fast forward to August 2023, and I found myself revisiting the project. After some code refactoring and algorithm improvements, the revamped version now boasts a decent win rate of over 70% thanks to the algorithm improvements!
 
 ## The repo contains my own implementation of [2048](https://en.wikipedia.org/wiki/2048_(video_game)), which used to be recognized as a very popular mobile game back in the day. The game was developed in Python using a number of popular libraries, e.g. [pygame](https://www.pygame.org/news), [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/), etc. The aim of the project was to develop an intelligent bot to solve the game domain problem. Please follow the descriptions below to find out more about the code!
 
