@@ -99,4 +99,4 @@ python main.py
 ## Contribution & Collaboration 🤝
 
 > **Note**
-In case you had an idea on how to improve the performance of the AI bot by either increasing its win percentage or decreasing the time needed to win a game, feel free to contact me via any of the links included in my [GitHub bio page](https://github.com/chizo4). You might also contribute to the project by opening a pull request with suggested improvements.
+In case you had an idea on how to improve the performance of the AI bot by either increasing its win percentage or decreasing the time needed to win a game, feel free to contact me via any of the links included in my [GitHub bio page](https://github.com/chizo4). You might also contribute to the project by opening a [Pull Request](https://github.com/chizo4/2048-intelligent-bot/pulls) with suggested improvements.
