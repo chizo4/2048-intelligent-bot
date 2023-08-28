@@ -21,12 +21,12 @@ class Bot(GameBoard):
     -----------
     '''
 
-    def __init__(self):
+    def __init__(self: 'Bot') -> None:
         '''
         Constructor to initialize the bot (and game GUI through parent class).
 
             Parameters:
-                self
+                self ('Bot')
         '''
         super().__init__()
 
@@ -43,37 +43,37 @@ class Bot(GameBoard):
         self.search_depth = 0
         self.move_num = 0
 
-    def update_costs(self, move, score):
+    def update_costs(self: 'Bot', move: str, score: int) -> None:
         '''
         Updates the cost using score sum and the heuristics for counting empty
         spots in the grid.
 
             Parameters:
-                self
+                self ('Bot')
                 move (str)  : Current move.
                 score (int) : Score sum for the current move after simulations.
         '''
         self.costs[move] += score
         self.costs[move] += self.EMPTY_SPOT_COEFF * np.count_nonzero(self.grid == 0)
 
-    def update_search_params(self):
+    def update_search_params(self: 'Bot') -> None:
         '''
         Dynamically update the values for search expansion. The further stage 
         of the game, the deeper the expansion of the game tree (search tree).
 
             Parameters:
-                self
+                self ('Bot')
         '''
         self.search_depth = self.SEARCH_DEPTH_COEFF * (1 + (self.move_num // self.SEARCH_COEFF))
         self.searches_per_move = self.SEARCH_PER_MOVE_COEFF * (1 + (self.move_num // self.SEARCH_COEFF))
     
-    def select_best_move(self):
+    def select_best_move(self: 'Bot') -> str:
         '''
         Selects the best move after full run of simulations. The best move
         is denoted by the max costs in the costs dictionary.
 
             Parameters:
-                self
+                self ('Bot')
 
             Returns:
                 (str) : Name of the most optimal move.
@@ -83,12 +83,12 @@ class Bot(GameBoard):
         
         return max(self.costs, key=self.costs.get)
 
-    def simulate_move(self):
+    def simulate_move(self: 'Bot') -> int:
         '''
         Simulates the future state of the game for a given move.
 
             Parameters:
-                self
+                self ('Bot')
             
             Returns:
                 total_score (int) : Total score obtained in the simulations.
@@ -114,7 +114,7 @@ class Bot(GameBoard):
 
         return total_score
 
-    def search_move(self):
+    def search_move(self: 'Bot') -> str:
         '''
         AI bot searches the most optimal path by simulating future states of the
         current grid for each of the four moves. The best move is selected
@@ -122,7 +122,7 @@ class Bot(GameBoard):
         max scores on board and empty spots multiplied by the constant.
 
             Parameters:
-                self
+                self ('Bot')
 
             Returns:
                 best_move (str) : Best searched move ('right'/'left'/'up'/'down').
@@ -165,12 +165,12 @@ class Bot(GameBoard):
 
         return best_move
 
-    def play(self):
+    def play(self: 'Bot') -> None:
         '''
         Main method to make the bot play the game.
 
             Parameters:
-                self
+                self ('Bot')
         '''
         # Initialize the board, with 2 starting numbers in the grid.
         self.insert_new_num(n=2)

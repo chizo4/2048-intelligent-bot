@@ -24,12 +24,12 @@ class GameBoard:
     -----------
     '''
 
-    def __init__(self):
+    def __init__(self: 'GameBoard') -> None:
         '''
         Constructor to initialize an appropriately-sized grid for the game with all attributes.
 
             Parameters:
-                self
+                self ('GameBoard')
         '''
         self.GRID_SIZE = 4
         self.MOVES = ['right', 'left', 'up', 'down']
@@ -66,12 +66,11 @@ class GameBoard:
         )
 
     @staticmethod
-    def update_arr(curr):
+    def update_arr(curr: np.array) -> np.array:
         '''
         Returns an updated array for row/column of the grid.
 
             Parameters:
-                self
                 cur (np.array) : Array of numbers in the current state of column/row.
 
             Returns:
@@ -98,21 +97,21 @@ class GameBoard:
 
         return np.array(new)
 
-    def update_score(self):
+    def update_score(self: 'GameBoard') -> None:
         '''
         Updates the score. The score is denoted by the single max value in the grid.
 
             Parameters:
-                self
+                self ('GameBoard')
         '''
         self.score = np.max(self.grid)
 
-    def draw(self):
+    def draw(self: 'GameBoard') -> None:
         '''
         Draws the initialized game window.
 
             Parameters:
-                self
+                self ('GameBoard')
         '''
         self.window.fill((GRID_COLOR))
 
@@ -145,12 +144,12 @@ class GameBoard:
                         text_area.get_rect(center=(x + self.SQUARE_SIZE / 2, y + self.SQUARE_SIZE / 2))
                     )
     
-    def draw_loss_screen(self):
+    def draw_loss_screen(self: 'GameBoard') -> None:
         '''
         Displays the screen on bot loss.
 
             Parameters:
-                self
+                self ('GameBoard')
         '''
         self.window.fill((GRID_COLOR))
         text_area = self.font_msg.render(
@@ -178,12 +177,12 @@ class GameBoard:
         pygame.display.flip()
         sleep(1)
 
-    def draw_win_screen(self):
+    def draw_win_screen(self: 'GameBoard') -> None:
         '''
         Displays the screen on bot win.
 
             Parameters:
-                self
+                self ('GameBoard')
         '''
         self.window.fill((GRID_COLOR))
         text_area = self.font_msg.render(
@@ -211,14 +210,14 @@ class GameBoard:
         pygame.display.flip()
         sleep(1)
 
-    def insert_new_num(self, n=1):
+    def insert_new_num(self: 'GameBoard', n=1) -> None:
         '''
         Updates a grid with a new number.
 
         Probability rates for values: 2 (100%).
 
             Parameters:
-                self
+                self ('GameBoard')
                 n (int) : Quantity of new numbers to be inserted.
         '''
         available_coords = []
@@ -230,7 +229,7 @@ class GameBoard:
         for c in random.sample(available_coords, k=n):
             self.grid[c] = 2
 
-    def make_move(self, move):
+    def make_move(self: 'GameBoard', move: str) -> None:
         '''
         Makes a move on the board (based on bot decision).
 
@@ -238,7 +237,7 @@ class GameBoard:
         If moving up/down - check the columns.
 
             Parameters:
-                self
+                self ('GameBoard')
                 move (str) : String describing the user's move (one from self.MOVES).
         '''
         for i in range(self.GRID_SIZE):
@@ -262,12 +261,12 @@ class GameBoard:
             elif move == 'down':
                 self.grid[:, i] = new[::-1]
 
-    def check_if_over(self):
+    def check_if_over(self: 'GameBoard') -> bool:
         '''
         Checks if the game is over.
 
             Parameters:
-                self
+                self ('GameBoard')
 
             Returns:
                 True/False (bool) : True if over; False otherwise.
@@ -283,49 +282,49 @@ class GameBoard:
 
         return True
 
-    def shuffle_move(self):
+    def shuffle_move(self: 'GameBoard') -> str:
         '''
         Shuffles a random move (either: 'right', 'left', 'up', or 'down').
 
             Parameters:
-                self
+                self ('GameBoard')
 
             Returns:
                 (str) : Randomly selected move.
         '''
         return np.random.choice(self.MOVES, 1)
 
-    def set_timer(self):
+    def set_timer(self: 'GameBoard') -> time:
         '''
         Sets the timer for a game attempt.
 
             Parameters:
-                self
+                self ('GameBoard')
             
             Returns:
                 (time) : Current time.
         '''
         return time()
 
-    def stop_timer(self, start):
+    def stop_timer(self: 'GameBoard', start: time) -> time:
         '''
         Stops the timer after a game attempt.
 
             Parameters:
-                self
-                start : Start time of the game attempt.
+                self ('GameBoard')
+                start (time) : Start time of the game attempt.
             
             Returns:
                 (time) : Attempt time (delta).
         '''
         return time() - start
 
-    def play(self):
+    def play(self: 'GameBoard') -> None:
         '''
         Main method to initialize the game board window.
 
             Parameters:
-                self
+                self ('GameBoard')
         '''
         try:
             while True:
