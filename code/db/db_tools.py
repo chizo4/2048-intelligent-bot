@@ -11,7 +11,7 @@ import sqlite3
 import pandas as pd
 
 
-def init_db():
+def init_db() -> None:
     '''
     Initializes the database to store: 
         sample's ID, score, win/loss, time played, date.
@@ -32,7 +32,7 @@ def init_db():
     db.close()
     print('The DB has been successfully initialized.')
 
-def update_db(win, score, t_sec, date):
+def update_db(win: int, score: int, t_sec: float, date: str) -> None:
     '''
     Updates the database inserting a new row.
 
@@ -40,7 +40,7 @@ def update_db(win, score, t_sec, date):
             win (int)     : 1 for win, 0 for loss
             score (int)   : game score
             t_sec (float) : game time (in seconds)
-            date          : game date
+            date (str)    : game date
     '''
     # Update only if the bot managed to run (i.e. no error/external interruption).
     if t_sec > 0:
@@ -66,7 +66,7 @@ def update_db(win, score, t_sec, date):
     else:
         print('\nNo updates to the DB.\n')
 
-def print_records_db():
+def print_records_db() -> None:
     '''
     Displays the database records using pandas dataframe.
     '''

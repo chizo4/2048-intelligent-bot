@@ -12,7 +12,7 @@ from db.db_tools import init_db, update_db
 from datetime import datetime
 
 
-def run_bot():
+def run_bot() -> None:
     '''
     Main method to perform one sample run of the AI bot
     and storing the results in DB.
@@ -27,7 +27,7 @@ def run_bot():
         date=now.strftime('%d %b %Y %I:%M:%S %p')
     )
 
-def run_tests():
+def run_tests() -> None:
     '''
     Performs 100 sample runs of the AI bot and stores 
     the results in the initialized database. 
